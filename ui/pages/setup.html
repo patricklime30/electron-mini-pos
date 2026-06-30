@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MiniPOS Setup</title>
+    <link rel="stylesheet" href="../css/setup.css">
+    <link rel="stylesheet" href="../css/toast.css">
+</head>
+<body>
+
+<div class="wizard">
+
+    <div class="sidebar">
+
+        <div class="logo">
+            MiniPOS
+        </div>
+
+        <div id="nav-1" class="sidebar-step active">
+            <span class="icon">1</span>
+            Informasi Toko
+        </div>
+
+        <div id="nav-2" class="sidebar-step">
+            <span class="icon">2</span>
+            Akun Admin
+        </div>
+
+        <div id="nav-3" class="sidebar-step">
+            <span class="icon">3</span>
+            Selesai
+        </div>
+
+    </div>
+
+    <div class="content">
+
+        <div class="content-inner">
+            <div id="step-1" class="step-page active">
+
+                <h1>Informasi Toko</h1>
+
+                <p>Masukkan informasi dasar toko Anda.</p>
+
+                <div class="form-group">
+                    <label>Nama Toko <span class="badge required">Wajib diisi</span></label>
+
+                    <input type="text" id="storeName" placeholder="Contoh: Toko Maju Jaya" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Nomor Telepon <span class="badge optional">Opsional</span></label>
+
+                    <input type="text" id="storePhone" placeholder="08123456789">
+                </div>
+
+                <div class="form-group">
+                    <label>Alamat Toko <span class="badge optional">Opsional</span></label>
+
+                    <textarea id="storeAddress" rows="4"></textarea>
+                </div>
+
+            </div>
+
+            <div id="step-2" class="step-page">
+
+               <h1>Buat Akun Administrator</h1>
+
+                <p>Akun ini digunakan untuk masuk ke sistem.</p>
+
+                <div class="form-group">
+                    <label>Username <span class="badge required">Wajib diisi</span></label>
+                
+                    <input id="username" type="text" placeholder="Contoh: john_doe" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Password <span class="badge required">Wajib diisi</span></label>
+                
+                    <div class="password-field">
+                        <input id="password" type="password" required>
+                        
+                        <span class="toggle-eye" id="iconPassword" onclick="togglePassword('password','iconPassword')">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"  width="20" height="20">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                            </svg>
+
+                        </span>
+                    </div>
+
+                    <small class="helper-text">
+                        Password must contain at least:
+                        <ul>
+                            <li>8 characters</li>
+                            <li>1 uppercase letter</li>
+                            <li>1 special character (e.g. !@#$%)</li>
+                        </ul>
+                    </small>
+                    
+                </div>
+
+                <div class="form-group">
+                    <label>Konfirmasi Password <span class="badge required">Wajib diisi</span></label>
+            
+                    <div class="password-field">
+                        <input id="confirmPassword" type="password" required>
+
+                        <span class="toggle-eye" id="iconConfirmPassword" onclick="togglePassword('confirmPassword','iconConfirmPassword')">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"  width="20" height="20">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                            </svg>
+
+                        </span>
+                    </div>
+                   
+                </div>
+
+            </div>
+
+            <div id="step-3" class="step-page">
+                <div class="success-card">
+
+                    <div class="check">
+                        ✓
+                    </div>
+
+                    <h1>Setup Berhasil</h1>
+
+                    <p>Sistem kasir siap digunakan.</p>
+
+                </div>
+
+            </div>
+
+        </div>
+        
+
+        <div class="buttons">
+            <button id="btnBack" class="btn-secondary">
+                Kembali
+            </button>
+
+            <button id="btnNext" class="btn-primary">
+                Lanjut
+            </button>
+        </div>
+
+    </div>
+
+</div>
+    <script src="../js/toast.js"></script>
+    <script src="../js/setup.js"></script>
+    <script src="../js/validation.js"></script>
+</body>
+</html>
