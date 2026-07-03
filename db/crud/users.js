@@ -1,5 +1,4 @@
 const {getDB} = require("../init");
-
 const bcrypt = require("bcrypt");
 
 function getAll(id) {
@@ -8,6 +7,53 @@ function getAll(id) {
     return db.prepare(`
         SELECT * FROM users ORDER BY role ASC
     `).get();
+}
+
+function getCredentials(username, password) {
+    const db = getDB();
+
+    return new Promise((resolve, reject) => {
+        db.get(
+            `
+            SELECT id, username, password
+            FROM users
+            WHERE username = ?
+            `,
+            [username],
+            async (err, row) => {
+                if (err) {
+                    return reject(err);
+                }
+
+                if (!row) {
+                    return resolve({
+                        success: false,
+                        message: "Username tidak cocok"
+                    });
+                }
+
+                const valid = await bcrypt.compare(
+                    password,
+                    row.password
+                );
+
+                if (!valid) {
+                    return resolve({
+                        success: false,
+                        message: "Password tidak cocok"
+                    });
+                }
+
+                resolve({
+                    success: true,
+                    user: {
+                        id: row.id,
+                        username: row.username
+                    }
+                });
+            }
+        );
+    });
 }
 
 function create(data) {
@@ -40,6 +86,7 @@ function remove(id) {
 
 module.exports = {
     getAll,
+    getCredentials,
     create,
     update,
     remove

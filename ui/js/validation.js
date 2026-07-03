@@ -53,14 +53,14 @@ class Validation {
         if (!/[A-Z]/.test(password)) {
             return {
                 valid: false,
-                message: "Password punya 1 huruf kapital."
+                message: "Password harus ada 1 huruf kapital."
             };
         }
 
         if (!/[!@#$%^&*(),.?":{}|<>_\-\\[\]\/+=~`]/.test(password)) {
             return {
                 valid: false,
-                message: "Password punya 1 simbol."
+                message: "Password harus ada 1 simbol."
             };
         }
 

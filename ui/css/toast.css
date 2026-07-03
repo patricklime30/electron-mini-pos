@@ -65,6 +65,18 @@
     color: #2196F3;
 }
 
+.toast.success #toast-message{
+    color: #4CAF50;
+}
+
+.toast.error #toast-message{
+    color: #F44336;
+}
+
+.toast.info #toast-message{
+    color: #2196F3;
+}
+
 .toast.success .toast-progress {
     background: #4CAF50;
 }

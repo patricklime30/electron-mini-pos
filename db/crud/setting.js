@@ -3,11 +3,23 @@ const {getDB} = require("../init");
 function isSetupDone() {
     const db = getDB();
 
-    const row = db.prepare(`
-        SELECT value FROM settings WHERE key = ?
-    `).get('is_setup_done');
+    return new Promise((resolve, reject) => {
+        db.get(
+            `
+            SELECT value
+            FROM settings
+            WHERE key = ?
+            `,
+            ["is_setup_done"],
+            (err, row) => {
+                if (err) {
+                    return reject(err);
+                }
 
-    return Number(row?.value) === 1;
+                resolve(Number(row?.value) === 1);
+            }
+        );
+    });
 }
 
 function finishSetup() {

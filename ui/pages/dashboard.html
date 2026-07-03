@@ -4,8 +4,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minipos | Dashboard</title>
+    <link rel="stylesheet" href="../css/dashboard.css">
 </head>
 <body>
-    <p>ini halaman dashboard</p>
+    <div class="app">
+
+        <!-- TOP NAVBAR -->
+        <header class="navbar">
+
+            <div class="logo">MiniPOS</div>
+
+            <nav class="nav-links">
+                <div class="nav-item active">Dashboard</div>
+                <div class="nav-item">Produk</div>
+                <div class="nav-item">Riwayat</div>
+            </nav>
+        
+            <!-- USER -->
+            <div class="user-menu">
+
+                <div class="user-btn" onclick="toggleMenu()">
+                    <img src="../../images/user.png" class="avatar">
+                    <span>Emilie Mills</span>
+                </div>
+
+                <!-- DROPDOWN -->
+                <div class="dropdown" id="dropdownMenu">
+
+                    <div class="user-info">
+                        <img src="../../images/user.png" class="avatar-lg">
+                        
+                        <div>
+                            <div class="name">Emilie Mills</div>
+                            <div class="role">admin</div>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="menu-item">Pengaturan</div>
+
+                    <div class="menu-item logout" onclick="logout()">
+                        Keluar
+                    </div>
+
+                </div>
+            </div>
+
+        </header>
+
+        <!-- MAIN -->
+        <main class="main">
+
+            <!-- PRODUCTS -->
+            <section class="products">
+                <h2>Daftar Produk</h2>
+
+                <div class="product-grid">
+
+                    <div class="product-card">
+                        <div class="img"></div>
+                        <h3>Milk Tea</h3>
+                        <p>Rp 20.000</p>
+                        <button>Pilih</button>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- CART -->
+            <aside class="cart">
+                <h2>Keranjang</h2>
+
+                <div class="cart-items"></div>
+
+                <div class="cart-footer">
+                    <div class="total">Total: Rp 0</div>
+                    <button class="checkout">Buat Pesanan</button>
+                </div>
+            </aside>
+
+        </main>
+
+    </div>
+
+    <script src="../js/dashboard.js"></script>
 </body>
 </html>

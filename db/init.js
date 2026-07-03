@@ -4,9 +4,11 @@ const path = require("path");
 let db;
 
 function initDB(app) {
-    const dbPath = path.join(app.getPath("userData"), "minipos.db");
+    if(!db){
+        const dbPath = path.join(app.getPath("userData"), "minipos.db");
 
-    db = new sql.Database(dbPath);
+        db = new sql.Database(dbPath);
+    }
 
     return db;
 }

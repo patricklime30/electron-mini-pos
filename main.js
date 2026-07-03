@@ -34,6 +34,7 @@ const createWindow = (frontend_file) => {
     });
 }
 
+// wizard saving process
 ipcMain.handle("setup:complete", async (event, data) => {
 
     try {
@@ -51,21 +52,32 @@ ipcMain.handle("setup:complete", async (event, data) => {
     }
 });
 
-app.on('ready', () => {
+// login process
+ipcMain.handle("check:login", async (event, data) => {
+    const loggedStatus = await admin.getCredentials(data.username, data.password);
+
+    return loggedStatus;
+});
+
+app.on('ready', async () => {
     // 1. create DB connection
     db = initDB(app);
 
     // 2. create tables
-    createSchema(db);
+    await createSchema(db);
 
     // 3. load setup logic 
     const setup = require("./db/crud/setting");
 
-    // 4. Check setup on app start
-    const mainFile = setup.isSetupDone() ? __dirname + "/ui/pages/login.html" : __dirname + "/ui/pages/setup.html";
-    console.log(setup.isSetupDone());
-    
+    // 4. Check setup on app start using sqlite3
+    const isDone = await setup.isSetupDone();
+
+    const mainFile = isDone
+            ? __dirname + "/ui/pages/login.html"
+            : __dirname + "/ui/pages/setup.html";
+
     createWindow(mainFile);
+    
 });
 
 app.on('window-all-closed', () => {
