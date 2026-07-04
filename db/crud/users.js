@@ -15,7 +15,7 @@ function getCredentials(username, password) {
     return new Promise((resolve, reject) => {
         db.get(
             `
-            SELECT id, username, password
+            SELECT id, username, password, role
             FROM users
             WHERE username = ?
             `,
@@ -48,7 +48,8 @@ function getCredentials(username, password) {
                     success: true,
                     user: {
                         id: row.id,
-                        username: row.username
+                        username: row.username,
+                        role: row.role
                     }
                 });
             }

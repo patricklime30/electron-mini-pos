@@ -11,6 +11,7 @@ const admin = require("./db/crud/users");
 
 let mainWindow;
 let db;
+let currentUser = null;
 
 const createWindow = (frontend_file) => {
     mainWindow = new BrowserWindow({
@@ -56,7 +57,22 @@ ipcMain.handle("setup:complete", async (event, data) => {
 ipcMain.handle("check:login", async (event, data) => {
     const loggedStatus = await admin.getCredentials(data.username, data.password);
 
+    if (loggedStatus.success) {
+        currentUser = loggedStatus.user;
+    }
+
     return loggedStatus;
+});
+
+// get current logged user data
+ipcMain.handle("get:currentUser", () => {
+    return currentUser;
+});
+
+//logout process
+ipcMain.handle("logout", () => {
+    currentUser = null;
+    return true;
 });
 
 app.on('ready', async () => {
