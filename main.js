@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 
 const path = require("path");
+const fs = require("fs");
 
 const { initDB } = require("./db/init");
 const { createSchema } = require("./db/schema");
@@ -8,6 +9,7 @@ const { createSchema } = require("./db/schema");
 const setup = require("./db/crud/setting");
 const store = require("./db/crud/store");
 const admin = require("./db/crud/users");
+const product = require("./db/crud/product");
 
 let mainWindow;
 let db;
@@ -19,8 +21,9 @@ const createWindow = (frontend_file) => {
         height: 500,
         autoHideMenuBar: true,
         webPreferences: {
-            nodeIntegration: true,
-            contextIsolation: false
+            preload: path.join(__dirname, "preload.js"),
+            nodeIntegration: false,
+            contextIsolation: true
         },
         icon: path.join(__dirname, 'images/logo.png')
     });
@@ -73,6 +76,65 @@ ipcMain.handle("get:currentUser", () => {
 ipcMain.handle("logout", () => {
     currentUser = null;
     return true;
+});
+
+// get all products
+ipcMain.handle("get-all-products", async () => {
+    return await product.getAll(); 
+});
+
+// get specific product
+ipcMain.handle("get-specific-product", async (event, id) => {
+    return await product.getById(id); 
+});
+
+// add or update product
+ipcMain.handle("add-update-product", async (event, data) => {
+    const oldProduct = await product.getById(data.id);
+
+    let image = oldProduct.image ?? null; // keep old image by default if exists
+
+    // copy if new file image
+    if (data.image) {
+        const source = data.image;
+
+        const uploadFolder = path.join(__dirname, "uploads");
+
+        if (!fs.existsSync(uploadFolder)) {
+            fs.mkdirSync(uploadFolder);
+        }
+
+        const fileName = Date.now() + "-" + path.basename(source);
+
+        const dest = path.join(uploadFolder, fileName);
+
+        // copy file to upload folder
+        fs.copyFileSync(source, dest);
+
+        // store the updated path
+        data.image = "uploads/" + fileName;
+
+        // remove old image from folder
+        if (image) {
+
+            const oldPath = path.join(__dirname, image);
+
+            if (fs.existsSync(oldPath)) {
+                fs.unlinkSync(oldPath);
+            }
+        }
+    }
+    else{
+        data.image = image;
+    }
+
+    return await product.createOrUpdate(data);
+    
+});
+
+// delete specific product
+ipcMain.handle("delete-specific-product", async (event, id) => {
+    return await product.remove(id); 
 });
 
 app.on('ready', async () => {

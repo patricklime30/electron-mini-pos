@@ -55,6 +55,7 @@ body {
 /* PRODUCTS */
 .product-section {
     flex: 2;
+    overflow: auto;
 }
 
 .product-grid {
@@ -78,9 +79,12 @@ body {
 }
 
 .product-card .img {
-    height: 80px;
-    background: #f1f5f9;
-    border-radius: 10px;
+    width: 100%;
+    min-height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+    background: #f3f4f6;
 }
 
 .name {

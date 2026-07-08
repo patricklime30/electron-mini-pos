@@ -1,8 +1,6 @@
-const { ipcRenderer } = require("electron");
-
 class Navbar {
     static async init() {
-        const user = await ipcRenderer.invoke("get:currentUser");
+        const user = await window.api.getCurrentUser();
 
         if (document.getElementById("navbar")) return;
 
@@ -91,7 +89,7 @@ class Navbar {
     }
 
     static async logout() {
-        const result = await ipcRenderer.invoke("logout");
+        const result = await window.api.logout();
 
         if(result){
             Toast.info("Sedang logout...");

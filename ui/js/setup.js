@@ -1,5 +1,3 @@
-const { ipcRenderer } = require("electron");
-
 let currentStep = 1;
 const totalSteps = 3;
 
@@ -154,7 +152,7 @@ document.getElementById("btnNext").addEventListener("click", async () => {
     }
 
     if (currentStep === 3) {
-        const result = await ipcRenderer.invoke("setup:complete", setupData);
+        const result = await window.api.setupComplete(setupData);
 
         if(result.success)
             window.location.href = "dashboard.html";

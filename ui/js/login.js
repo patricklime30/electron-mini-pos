@@ -1,5 +1,3 @@
-const { ipcRenderer } = require("electron");
-
 document.addEventListener("DOMContentLoaded", () => {
 
     const passwordInput = PasswordInput.create(
@@ -29,7 +27,7 @@ document.getElementById("btnLogin").addEventListener("click", async () => {
         return;
     }
 
-    const result = await ipcRenderer.invoke("check:login", {username, password});
+    const result = await window.api.checkLogin({username, password});
     
     if(result.success)
         window.location.href = "dashboard.html";

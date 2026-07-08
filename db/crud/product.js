@@ -3,36 +3,104 @@ const {getDB} = require("../init");
 function getAll() {
     const db = getDB();
 
-    return db.prepare(`
-        SELECT * FROM products ORDER BY id DESC
-    `).all();
+    return new Promise((resolve, reject) => {
+        db.all(
+            `
+            SELECT * FROM products ORDER BY id DESC
+            `,
+            [],
+            (err, rows) => {
+                if (err) {
+                    return reject(err);
+                }
+
+                resolve(rows);
+            }
+        );
+    });
 }
 
 function getById(id) {
     const db = getDB();
 
-    return db.prepare(`
-        SELECT * FROM products WHERE id = ?
-    `).get(id);
+    return new Promise((resolve, reject) => {
+        db.get(
+            `
+            SELECT * FROM products WHERE id = ?
+            `,
+            [id],
+            (err, row) => {
+                if (err) {
+                    return reject(err);
+                }
+
+                resolve(row);
+            }
+        );
+    });
 }
 
-function create(data) {
+function createOrUpdate(data) {
     const db = getDB();
 
-    return db.prepare(`
-        INSERT INTO products (image, name, price, stock)
-        VALUES (?, ?, ?, ?)
-    `).run(data.image, data.name, data.price, data.stock);
-}
+    return new Promise((resolve, reject) => {
 
-function update(id, data) {
-    const db = getDB();
+        if (data.id) {
+            // UPDATE
+            db.run(
+                `
+                UPDATE products
+                SET
+                    name = ?,
+                    price = ?,
+                    stock = ?,
+                    image = ?
+                WHERE id = ?
+                `,
+                [
+                    data.name,
+                    data.price,
+                    data.stock,
+                    data.image,
+                    data.id
+                ],
+                (err, row) => {
+                    if (err) return reject(err);
 
-    return db.prepare(`
-        UPDATE products
-        SET image = ?, name = ?, price = ?, stock = ?
-        WHERE id = ?
-    `).run(data.image, data.name, data.price, data.stock, id);
+                    resolve({
+                        action: "Produk berhasil diperbarui",
+                        id: data.id,
+                        changes: this.changes
+                    });
+                }
+            );
+
+        } else {
+            // INSERT
+            db.run(
+                `
+                INSERT INTO products(name, price, stock, image)
+                VALUES (?, ?, ?, ?)
+                `,
+                [
+                    data.name,
+                    data.price,
+                    data.stock,
+                    data.image
+                ],
+                (err, row) => {
+                    if (err) return reject(err);
+
+                    resolve({
+                        action: "Produk berhasil dibuat",
+                        id: this.lastID
+                    });
+                }
+            );
+
+        }
+
+    });
 }
 
 function updateStock(id, qty) {
@@ -48,16 +116,29 @@ function updateStock(id, qty) {
 function remove(id) {
     const db = getDB();
     
-    return db.prepare(`
-        DELETE FROM products WHERE id = ?
-    `).run(id);
+    return new Promise((resolve, reject) => {
+         db.run(
+            `
+            DELETE FROM products WHERE id = ?
+            `,
+            [id],
+            (err, row) => {
+                if (err) return reject(err);
+
+                resolve({
+                    message: "Produk berhasil dihapus",
+                    changes: this.changes
+                });
+            }
+        );
+    });
+   
 }
 
 module.exports = {
     getAll,
     getById,
-    create,
-    update,
+    createOrUpdate,
     updateStock,
     remove
 };
