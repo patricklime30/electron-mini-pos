@@ -6,6 +6,7 @@
     <title>Minipos | Dashboard</title>
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="../css/toast.css">
+    <link rel="stylesheet" href="../css/modal.css">
     <link rel="stylesheet" href="../css/header.css">
 </head>
 <body>
@@ -41,24 +42,17 @@
                     </div>
 
                     <div class="cart-items">
-
-                        <div class="cart-item">
-                            <div>
-                                <div class="name">Milk Tea</div>
-                                <div class="price">Rp 20.000</div>
-                            </div>
-
-                            <div class="qty">x1</div>
-                        </div>
-
+                        <!-- inject selected products here -->
                     </div>
 
                     <div class="cart-footer">
                         <div class="total">
-                            Total: <b>Rp 20.000</b>
+                            <span>Total:</span>
+    
+                            <strong id="totalAmount">Rp 0</strong>
                         </div>
 
-                        <button class="btn-primary checkout">
+                        <button class="btn-primary checkout" onclick="openCheckout()">
                             Buat Pesanan
                         </button>
                     </div>
@@ -71,7 +65,49 @@
 
     </div>
 
+    <!-- preview modal -->
+    <div id="previewModal" class="modal">
+
+        <div class="preview-box">
+
+            <div class="preview-header">
+                <h2>Purchase Preview</h2>
+                <button onclick="closePreview()">×</button>
+            </div>
+
+
+            <div id="previewItems" class="preview-items">
+                <!-- items injected here -->
+            </div>
+
+
+            <div class="preview-summary">
+
+                <div>
+                    <span>Payment</span>
+                    <strong id="previewPayment">Cash</strong>
+                </div>
+
+                <div class="total-row">
+                    <span>Total</span>
+                    <strong id="previewTotal">
+                        Rp0
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <button class="btn-primary confirm-btn" onclick="confirmPurchase()">
+                Confirm Payment
+            </button>
+
+        </div>
+
+    </div>
+
     <script src="../js/toast.js"></script>
+    <script src="../js/modal.js"></script>
     <script src="../js/header.js"></script>
     <script src="../js/dashboard.js"></script>
 </body>

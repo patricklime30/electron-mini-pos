@@ -1,16 +1,18 @@
-const modal = document.getElementById("productModal");
-const modalTitle = document.getElementById("modalTitle");
-const nameInput = document.getElementById("productName");
-const priceInput = document.getElementById("productPrice");
-const stockInput = document.getElementById("productStock");
-const imageInput = document.getElementById("productImage");
-
-const deleteModal = document.getElementById("deleteModal");
+const modal = "productModal";
+const deleteModal = "deleteModal";
 
 let editingId = null;
 let deleteId = null;
 
 let selectedImage = null;
+
+let addEditProductModal = null;
+let deleteProductModal = null;
+let modalTitle;
+let nameInput;
+let priceInput;
+let stockInput;
+let imageInput;
 
 document.addEventListener("DOMContentLoaded", async () => {
     const user = await window.api.getCurrentUser();
@@ -20,34 +22,208 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     Navbar.init();
 
+    // create add&edit modal
+    addEditProductModal = Modal.init({
+            id: modal,
+            title: "Tambah Produk",
+            subtitle: "Masukkan informasi produk di bawah ini.",
+            body: `
+                <div class="form-group">
+                    <label>Nama produk</label>
+                    <input
+                        type="text"
+                        id="productName"
+                        maxlength="100"
+                    >
+                </div>
+
+                <div class="form-row">
+
+                    <div class="form-group">
+                        <label>Harga</label>
+                        <input
+                            type="text"
+                            id="productPrice"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label>Stok</label>
+                        <input
+                            type="number"
+                            id="productStock"
+                            placeholder="0"
+                        >
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label>Gambar</label>
+                    <input
+                        type="file"
+                        id="productImage"
+                        accept="image/*"
+                    >
+                </div>
+            `,
+            footer: `
+                <button
+                    class="btn-primary"
+                    id="saveBtn">
+                    Simpan Produk
+                </button>
+
+                <button
+                    class="btn-secondary"
+                    id="cancelProductBtn">
+                    Batal
+                </button>
+            `
+        });
+
+    // create delete modal
+    deleteProductModal = Modal.init({
+        id: deleteModal,
+        title: "Hapus Produk",
+        subtitle: "",
+        body: `
+            <p style="color:#374151">
+                Apakah ingin menghapus produk <span id="productDeleteName"></span>?
+            </p>
+        `,
+        footer: `
+            <button class="btn-delete" id="confirmDeleteBtn">
+                Ya, hapus
+            </button>
+
+            <button class="btn-secondary" id="cancelDeleteBtn">
+                Batal
+            </button>
+        `
+    });
+
+    // GET ELEMENT AFTER MODAL EXISTS
+    modalTitle = document.getElementById(`${modal}-title`);
+    nameInput = document.getElementById("productName");
+    priceInput = document.getElementById("productPrice");
+    stockInput = document.getElementById("productStock");
+    imageInput = document.getElementById("productImage");
+    
+    // modal exists
+    if(addEditProductModal){
+        // add delimiter price input while typing
+        priceInput.addEventListener("input", function () {
+
+            let value = this.value.replace(/\D/g, "");
+
+            if (value === "") {
+                this.value = "";
+                return;
+            }
+
+            this.value = new Intl.NumberFormat("id-ID").format(value);
+
+        });
+
+        // Get the image path in renderer
+        imageInput.addEventListener("change", () => {
+
+            const file = imageInput.files[0];
+
+            if (file) {
+                selectedImage = window.api.getFilePath(file);
+
+                console.log(selectedImage);
+            }
+
+        });
+        
+        // click cancel Product modal
+        document.getElementById("cancelProductBtn").addEventListener("click", () => {
+
+            closeModal(modal);
+        });
+
+        // click save button
+        document.getElementById("saveBtn").addEventListener("click", async () => {
+            const MAX_NAME_LENGTH = 100;
+
+            if(!nameInput.value){
+                Toast.error('Nama produk wajib diisi');
+
+                return;
+            }
+
+            if (nameInput.value.length > MAX_NAME_LENGTH) {
+                Toast.error("Nama produck lebih dari 100 karakter");
+                return;
+            }
+
+            if(!priceInput.value || isNaN(priceInput.value) || priceInput.value < 0){
+                Toast.error('Format harga tidak sesuai');
+                return;
+            }
+
+            if(!stockInput.value || isNaN(stockInput.value) || stockInput.value < 0){
+                Toast.error('Format stok tidak sesuai');
+                return;
+            }
+
+            // remove thousand formatter
+            const price = Number(priceInput.value.replace(/\./g, ""));
+
+            const product = {
+                id: editingId,
+                name: nameInput.value,
+                price: price,
+                stock: Number(stockInput.value),
+                image: selectedImage
+            };
+
+            const result = await window.api.addUpdateProduct(product);
+
+            Toast.success(result.action);
+            
+            closeModal(modal);
+
+            // show product to table
+            loadProducts();
+        });
+    }
+
+    if(deleteProductModal){
+        
+        // click delete button
+        document.getElementById("confirmDeleteBtn").onclick = async () => {
+
+            if (!deleteId) return;
+
+            try {
+                const result = await window.api.deleteSelectedProduct(deleteId);
+
+                Toast.success(result.message);
+
+                closeModal(deleteModal);
+
+                loadProducts();
+
+            } catch (err) {
+                Toast.error("Gagal menghapus produk");
+
+                console.error(err);
+            }
+        };
+
+        // click cancel Delete modal
+        document.getElementById("cancelDeleteBtn").addEventListener("click", () => {
+
+            closeModal(deleteModal);
+        });
+    }
+
+
     loadProducts();
-});
-
-// add delimiter price input while typing
-priceInput.addEventListener("input", function () {
-
-    let value = this.value.replace(/\D/g, "");
-
-    if (value === "") {
-        this.value = "";
-        return;
-    }
-
-    this.value = new Intl.NumberFormat("id-ID").format(value);
-
-});
-
-// Get the image path in renderer
-imageInput.addEventListener("change", () => {
-
-    const file = imageInput.files[0];
-
-    if (file) {
-        selectedImage = window.api.getFilePath(file);
-
-        console.log(selectedImage);
-    }
-
 });
 
 // click add button
@@ -58,14 +234,16 @@ document.getElementById("btnAdd").addEventListener("click", () => {
 
 // open modal
 function openModal(modalId){
-    modalId.classList.add('show');
+    
+    Modal.show(modalId); 
 }
 
 // set add product modal
 function addProduct(){
-    editingId = null;
 
-    modalTitle.textContent = "Tambah Produk";
+    editingId = null;
+   
+    modalTitle.innerHTML = "Tambah Produk";
 
     nameInput.value = "";
     priceInput.value = "";
@@ -74,45 +252,6 @@ function addProduct(){
 
     openModal(modal);
 }
-
-// click save button
-document.getElementById("saveBtn").addEventListener("click", async () => {
-    if(!nameInput.value){
-        Toast.error('Nama produk wajib diisi');
-
-        return;
-    }
-
-    if(!priceInput.value || isNaN(priceInput.value) || priceInput.value < 0){
-        Toast.error('Format harga tidak sesuai');
-        return;
-    }
-
-    if(!stockInput.value || isNaN(stockInput.value) || stockInput.value < 0){
-        Toast.error('Format stok tidak sesuai');
-        return;
-    }
-
-    // remove thousand formatter
-    const price = Number(priceInput.value.replace(/\./g, ""));
-
-    const product = {
-        id: editingId,
-        name: nameInput.value,
-        price: price,
-        stock: Number(stockInput.value),
-        image: selectedImage
-    };
-
-    const result = await window.api.addUpdateProduct(product);
-
-    Toast.success(result.action);
-    
-    closeModal(modal);
-
-    // show product to table
-    loadProducts();
-});
 
 // render product data to table
 async function loadProducts(){
@@ -168,22 +307,10 @@ async function loadProducts(){
 
 }
 
-// click cancel Product modal
-document.getElementById("cancelProductBtn").addEventListener("click", () => {
-
-    closeModal(modal);
-});
-
-// click x Product modal
-document.getElementById("closeProductModal").addEventListener("click", () => {
-
-    closeModal(modal);
-});
-
 // close product modal
 function closeModal(modalId){
     
-    modalId.classList.remove("show");
+    Modal.close(modalId);
 }
 
 // click edit product modal
@@ -194,7 +321,7 @@ async function editProduct(id){
     // render product data to edit modal
     editingId = product.id;
 
-    modalTitle.textContent = "Ubah Produk";
+    modalTitle.innerHTML = "Ubah Produk";
 
     nameInput.value = product.name;
     priceInput.value = new Intl.NumberFormat("id-ID").format(product.price);
@@ -205,42 +332,13 @@ async function editProduct(id){
 }
 
 // open delete modal
-function deleteProduct(id) {
+async function deleteProduct(id) {
 
     deleteId = id;
 
+    const product = await window.api.getSelectedProduct(id);
+
+    document.getElementById('productDeleteName').innerHTML = product.name;
+
     openModal(deleteModal);
 }
-
-// click delete button
-document.getElementById("confirmDeleteBtn").onclick = async () => {
-
-    if (!deleteId) return;
-
-    try {
-        const result = await window.api.deleteSelectedProduct(deleteId);
-
-        Toast.success(result.message);
-
-        closeModal(deleteModal);
-
-        loadProducts();
-
-    } catch (err) {
-        Toast.error("Gagal menghapus produk");
-
-        console.error(err);
-    }
-};
-
-// click cancel Delete modal
-document.getElementById("cancelDeleteBtn").addEventListener("click", () => {
-
-    closeModal(deleteModal);
-});
-
-// click x Delete modal
-document.getElementById("closeDeleteModal").addEventListener("click", () => {
-
-    closeModal(deleteModal);
-});
