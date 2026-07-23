@@ -1,9 +1,13 @@
 const modalCheckout = "checkoutModal";
+const modalPreview = "previewModal";
+
 let cart = [];
 let productArray = [];
+let total = 0;
 
 let paymentMethod = null;
 let checkoutModal = null;
+let previewModal = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
     const user = await window.api.getCurrentUser();
@@ -59,6 +63,45 @@ document.addEventListener("DOMContentLoaded", async () => {
             `
         });
 
+    // create preview modal
+    previewModal = Modal.init({
+            id: modalPreview,
+            title: "Konfirmasi Pembayaran",
+            subtitle: "",
+            body: `
+                <div id="previewItems" class="preview-items">
+                    <!-- items injected here -->
+                </div>
+
+                <div class="preview-summary">
+
+                    <div>
+                        <span>Metode</span>
+                        <strong id="previewPayment">Tunai</strong>
+                    </div>
+
+                    <div class="total-row">
+                        <span>Total</span>
+                        <strong id="previewTotal">
+                            Rp 0
+                        </strong>
+                    </div>
+
+                </div>
+            `,
+            footer: `
+                <button class="btn-primary" onclick="confirmPurchase()">
+                    Bayar
+                </button>
+
+                <button
+                    class="btn-secondary"
+                    id="cancelPreviewBtn">
+                    Batal
+                </button>
+            `
+        });
+
     if(checkoutModal){
         // click cancel Product modal
         document.getElementById("cancelCheckoutBtn").addEventListener("click", () => {
@@ -67,14 +110,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    loadProducts();
-});
+    if(previewModal){
+        // click cancel Preview modal
+        document.getElementById("cancelPreviewBtn").addEventListener("click", () => {
 
-// function add delimiter for number
-const rupiah = new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    minimumFractionDigits: 0,
+            closeModal(modalPreview);
+        });
+    }
+
+    loadProducts();
 });
 
 // format number shorter to easily read
@@ -130,7 +174,12 @@ async function loadProducts(){
                 <div class="product-stock">Stok: ${product.stock}</div>
 
                 <div class="product-footer">
-                    <button class="btn-primary" onclick="addToCart(${product.id})">Tambah</button>
+                    <button class="${product.stock <= 0 ? 'btn-disabled' : 'btn-primary'}" 
+                        onclick="addToCart(${product.id})" 
+                        ${product.stock <= 0 ? "disabled" : ""}
+                    >
+                        ${product.stock <= 0 ? "Habis" : "Tambah"}
+                    </button>
                 </div>
             </div>
            
@@ -146,6 +195,11 @@ function addToCart(productId) {
     const existing = cart.find(item => item.id === productId);
 
     if (existing) {
+        if (existing.qty >= product.stock) {
+            Toast.error("Stok tidak mencukupi");
+            return;
+        }
+
         existing.qty++;
     } else {
         cart.push({
@@ -170,7 +224,7 @@ function renderCart() {
 
                 <div>
                     <div class="item-name">${truncate(item.name, 30)}</div>
-                    <div class="item-price">${rupiah.format(item.price)}</div>
+                    <div class="item-price">${formatRupiah(item.price)}</div>
                 </div>
 
                 <div class="qty">
@@ -195,6 +249,11 @@ function increaseQty(id) {
 
     const item = cart.find(i => i.id === id);
 
+    if (item.qty >= item.stock) {
+        Toast.error("Stok tidak mencukupi");
+        return;
+    }
+
     item.qty++;
 
     renderCart();
@@ -215,11 +274,11 @@ function decreaseQty(id) {
 
 function updateTotal() {
 
-    const total = cart.reduce((sum, item) => {
+    total = cart.reduce((sum, item) => {
         return sum + (item.price * item.qty);
     }, 0);
 
-    document.getElementById("totalAmount").textContent = rupiah.format(total);
+    document.getElementById("totalAmount").textContent = formatRupiah(total);
 }
 
 function openCheckout(){
@@ -261,13 +320,12 @@ function showPreview(){
                     </span>
 
                     <span class="item-qty">
-                        ${item.qty} x ${rupiah.format(item.price)}
+                        ${item.qty} x ${formatRupiah(item.price)}
                     </span>
                 </div>
 
-
                 <strong>
-                    ${rupiah.format(item.qty * item.price)}
+                    ${formatRupiah(item.qty * item.price)}
                 </strong>
 
             </div>
@@ -275,11 +333,26 @@ function showPreview(){
 
     });
 
-    const total = cart.reduce((sum, item) => {
-        return sum + (item.price * item.qty);
-    }, 0);
+    document.getElementById("previewPayment").innerText = paymentMethod;
 
-    document.getElementById("previewTotal").innerText = rupiah.format(total);
+    document.getElementById("previewTotal").innerText = formatRupiah(total);
 
-    document.getElementById("previewModal").classList.add("show");
+    Modal.show(modalPreview);
+}
+
+async function confirmPurchase(){
+    const result = await window.api.saveTransaction({
+        items: cart,
+        paymentMethod,
+        total
+    });
+
+    console.log(result);
+
+    await window.api.printReceipt(result.transaction_id);
+
+    cart = [];
+    total = 0;
+    paymentMethod = "";
+    productArray = [];
 }

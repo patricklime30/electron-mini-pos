@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniPOS | Riwayat Transaksi</title>
+    <link rel="stylesheet" href="../css/history.css">
+    <link rel="stylesheet" href="../css/toast.css">
+    <link rel="stylesheet" href="../css/modal.css">
+    <link rel="stylesheet" href="../css/header.css">
+</head>
+
+<body>
+    <div class="history-container">
+        <div class="history-content">
+            <div class="page-header">
+                <div>
+                    <h1>Riwayat Transaksi</h1>
+                    <p>Kelola daftar transaski yang tersimpan</p>
+                </div>
+
+            </div>
+
+            <div class="transaction-summary">
+
+                <div class="summary-box">
+                    <div class="summary-title">
+                        Total Transaksi
+                    </div>
+                    <div class="summary-value">
+                        0
+                    </div>
+                </div>
+
+                <div class="summary-box">
+                    <div class="summary-title">
+                        Total Cash
+                    </div>
+                    <div class="summary-value">
+                        Rp 0
+                    </div>
+                </div>
+
+                <div class="summary-box">
+                    <div class="summary-title">
+                        Total Transfer
+                    </div>
+                    <div class="summary-value">
+                        Rp 0
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="table-card">
+
+                <table class="transaction-table">
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tanggal</th>
+                            <th>Pembayaran</th>
+                            <th>Subtotal</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="transactionTable">
+                        <!-- inject data here -->
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script src="../js/utils.js"></script>
+    <script src="../js/toast.js"></script>
+    <script src="../js/modal.js"></script>
+    <script src="../js/header.js"></script>
+    <script src="../js/history.js"></script>
+    <script src="../js/receipt.js"></script>
+</body>
+
+</html>

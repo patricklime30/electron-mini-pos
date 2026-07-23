@@ -10,6 +10,9 @@ const setup = require("./db/crud/setting");
 const store = require("./db/crud/store");
 const admin = require("./db/crud/users");
 const product = require("./db/crud/product");
+const transaction = require("./db/crud/transaction");
+
+// const { renderReceipt } = require("./ui/js/receipt");
 
 let mainWindow;
 let db;
@@ -136,6 +139,69 @@ ipcMain.handle("add-update-product", async (event, data) => {
 ipcMain.handle("delete-specific-product", async (event, id) => {
     return await product.remove(id); 
 });
+
+// store payment transaction
+ipcMain.handle("create-transaction", async (event, data) => {
+    return await transaction.createTransaction(data); 
+});
+
+// get all transactions
+ipcMain.handle("get-all-transaction", async () => {
+    return await transaction.getAll(); 
+});
+
+//get transaction summary
+ipcMain.handle("get-transaction-summary", async () => {
+    return await transaction.getSummary();
+});
+
+// get transaction receipt
+ipcMain.handle("get-receipt", async (event, id) => {
+    return await transaction.getReceipt(id); 
+});
+
+// print transaction receipt
+ipcMain.handle("print-receipt", async (event, id) => {
+    
+    const printWindow = new BrowserWindow({
+        width: 400,
+        height: 700,
+        show: true,
+        webPreferences: {
+            nodeIntegration: false,
+            contextIsolation: true,
+            preload: path.join(__dirname, "preload.js")
+        }
+    });
+
+    printWindow.webContents.on("did-finish-load", () => {
+      
+        printWindow.webContents.send(
+            "receipt-print",
+            id
+        );
+    });
+
+    await printWindow.loadFile("./ui/pages/receipt.html");
+});
+
+ipcMain.handle("receipt-ready", (event) =>{
+
+    const win = BrowserWindow.fromWebContents(event.sender);
+
+    win.webContents.print(
+        {
+            silent:false
+        },
+        (success, errorType) => {
+
+            console.log("Print finished:", success);
+
+            win.close()
+
+        });
+});
+
 
 app.on('ready', async () => {
     // 1. create DB connection

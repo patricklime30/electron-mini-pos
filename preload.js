@@ -33,6 +33,38 @@ contextBridge.exposeInMainWorld("api", {
         return ipcRenderer.invoke("delete-specific-product", id);
     },
 
+    saveTransaction: (data) => {
+        return ipcRenderer.invoke("create-transaction", data);
+    },
+
+    getAllTransaction: () => {
+        return ipcRenderer.invoke("get-all-transaction");
+    },
+
+    getTransactionSummary: () => {
+        return ipcRenderer.invoke("get-transaction-summary");
+    },
+
+    getReceipt: (id) => {
+        return ipcRenderer.invoke("get-receipt", id);
+    },
+
+    printReceipt: (id) => {
+        return ipcRenderer.invoke("print-receipt", id);
+    },
+
+    onReceiptPrint: (callback) => {
+        
+        ipcRenderer.on("receipt-print", (event, id) => {
+                callback(id);
+            });
+    },
+
+    receiptReady: () => {
+        
+        return ipcRenderer.invoke("receipt-ready");
+    },
+
     logout: () => {
         return ipcRenderer.invoke("logout");
     },

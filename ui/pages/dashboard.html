@@ -65,47 +65,7 @@
 
     </div>
 
-    <!-- preview modal -->
-    <div id="previewModal" class="modal">
-
-        <div class="preview-box">
-
-            <div class="preview-header">
-                <h2>Purchase Preview</h2>
-                <button onclick="closePreview()">×</button>
-            </div>
-
-
-            <div id="previewItems" class="preview-items">
-                <!-- items injected here -->
-            </div>
-
-
-            <div class="preview-summary">
-
-                <div>
-                    <span>Payment</span>
-                    <strong id="previewPayment">Cash</strong>
-                </div>
-
-                <div class="total-row">
-                    <span>Total</span>
-                    <strong id="previewTotal">
-                        Rp0
-                    </strong>
-                </div>
-
-            </div>
-
-
-            <button class="btn-primary confirm-btn" onclick="confirmPurchase()">
-                Confirm Payment
-            </button>
-
-        </div>
-
-    </div>
-
+    <script src="../js/utils.js"></script>
     <script src="../js/toast.js"></script>
     <script src="../js/modal.js"></script>
     <script src="../js/header.js"></script>

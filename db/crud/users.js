@@ -1,14 +1,6 @@
 const {getDB} = require("../init");
 const bcrypt = require("bcrypt");
 
-function getAll(id) {
-    const db = getDB();
-
-    return db.prepare(`
-        SELECT * FROM users ORDER BY role ASC
-    `).get();
-}
-
 function getCredentials(username, password) {
     const db = getDB();
 
@@ -86,7 +78,6 @@ function remove(id) {
 }
 
 module.exports = {
-    getAll,
     getCredentials,
     create,
     update,

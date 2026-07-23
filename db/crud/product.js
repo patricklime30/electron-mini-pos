@@ -64,7 +64,7 @@ function createOrUpdate(data) {
                     data.image,
                     data.id
                 ],
-                (err, row) => {
+                function(err) {
                     if (err) return reject(err);
 
                     resolve({
@@ -88,7 +88,7 @@ function createOrUpdate(data) {
                     data.stock,
                     data.image
                 ],
-                (err, row) => {
+                function(err){
                     if (err) return reject(err);
 
                     resolve({

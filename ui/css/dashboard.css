@@ -236,6 +236,17 @@ body {
     background: #115e59;
 }
 
+.btn-disabled {
+    background: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.btn-disabled:hover {
+    background: #ccc;
+}
+
 .checkout {
     width: 100%;
 }
@@ -322,6 +333,7 @@ body {
 .preview-items {
     max-height:300px;
     overflow-y:auto;
+    font-size: 14px;
 }
 
 .preview-item {
@@ -355,6 +367,8 @@ body {
     display:flex;
     justify-content:space-between;
     margin-bottom:10px;
+    color:#374151;
+    font-size:14px;
 }
 
 .total-row strong {

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniPOS | Receipt</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* receipt */
+        .receipt-header{
+            text-align:center;
+            margin-bottom: 30px;
+        }
+
+        .receipt-header h2{
+            margin-bottom:5px;
+        }
+
+        .receipt-header p{
+            margin:2px 0;
+            color:#666;
+        }
+
+        .receipt-items {
+            max-height:300px;
+            overflow-y:auto;
+            font-size: 14px;
+        }
+
+        .receipt-item {
+            display:flex;
+            justify-content:space-between;
+            padding:12px 0;
+            border-bottom:1px solid #e5e7eb;
+        }
+
+        .receipt-summary {
+            margin-top:20px;
+            padding-top:15px;
+            border-top:1px solid #e5e7eb;
+        }
+
+        .receipt-summary > div {
+            display:flex;
+            justify-content:space-between;
+            margin-bottom:10px;
+            font-weight:600;
+            color:#374151;
+            font-size:14px;
+        }
+
+        .item-info {
+            display:flex;
+            flex-direction:column;
+        }
+
+        .item-name {
+            font-weight:600;
+        }
+
+        .item-qty {
+            color:#6b7280;
+            font-size:13px;
+        }
+
+        .total-row #orderTotal {
+            font-size:22px;
+            color:#0f766e;
+        }
+
+        @media print {
+
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .receipt {
+                width: 100%;
+                box-shadow: none;
+                border-radius: 0;
+            }
+
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="receipt-header">
+        <h2 id="storeName"></h2>
+        <p id="storeAddress"></p>
+        <small id="storePhone"></small>
+    </div>
+
+    <div id="orderItems" class="receipt-items">
+        <!-- items injected here -->
+    </div>
+
+    <div class="receipt-summary">
+
+        <div>
+            <span>Tanggal</span>
+            <span id="orderDate"></span>
+        </div>
+
+        <div>
+            <span>Metode</span>
+            <span id="orderPayment"></span>
+        </div>
+
+        <div class="total-row">
+            <span>Total</span>
+            <span id="orderTotal">
+                Rp 0
+            </span>
+        </div>
+
+    </div>
+
+    <script src="../js/utils.js"></script>
+    <script src="../js/receipt.js"></script>
+</body>
+
+</html>
