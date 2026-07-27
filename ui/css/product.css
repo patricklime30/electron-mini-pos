@@ -8,6 +8,7 @@ body{
     font-family: Segoe UI, sans-serif;
     background: #f4f6f8;
     height: 100%;
+    color:#374151;
 }
 
 /* CONTENT */
@@ -58,7 +59,7 @@ body{
 }
 
 .product-table thead {
-    background: #f1f5f9;
+    background: #f8fafc;
 }
 
 .product-table th {
@@ -87,6 +88,28 @@ body{
     background: #f3f4f6;
 }
 
+.stock-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+/* Out of stock */
+.stock-badge.out {
+    color: #b91c1c;
+    background: #fee2e2;
+    border: 1px solid #fecaca;
+}
+
+.stock-badge.out::before {
+    content: "⚠";
+}
 
 /* EDIT / DELETE */
 .btn-edit {

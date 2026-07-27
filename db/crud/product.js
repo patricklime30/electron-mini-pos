@@ -103,16 +103,6 @@ function createOrUpdate(data) {
     });
 }
 
-function updateStock(id, qty) {
-    const db = getDB();
-
-    return db.prepare(`
-        UPDATE products
-        SET stock = stock - ?
-        WHERE id = ?
-    `).run(qty, id);
-}
-
 function remove(id) {
     const db = getDB();
     
@@ -122,7 +112,7 @@ function remove(id) {
             DELETE FROM products WHERE id = ?
             `,
             [id],
-            (err, row) => {
+            function(err) {
                 if (err) return reject(err);
 
                 resolve({
@@ -139,6 +129,5 @@ module.exports = {
     getAll,
     getById,
     createOrUpdate,
-    updateStock,
     remove
 };

@@ -46,5 +46,5 @@ window.api.onReceiptPrint(async (id)=>{
    
     await renderReceipt(id);
 
-    window.api.receiptReady();
+    await window.api.receiptReady();
 });

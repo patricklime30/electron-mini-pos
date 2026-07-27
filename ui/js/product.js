@@ -286,7 +286,12 @@ async function loadProducts(){
                     }).format(product.price)}
                 </td>
 
-                <td>${product.stock}</td>
+                <td style="text-align: center;">${
+                    product.stock <= 0
+                        ? '<span class="stock-badge out">Habis</span>'
+                        : product.stock
+                    }
+                </td>
 
                 <td>
 

@@ -22,8 +22,7 @@ function createTransaction(data) {
                     }
 
                     const transactionId = this.lastID;
-                    console.log(transactionId);
-
+                  
                     const stmt = db.prepare(`
                         INSERT INTO transaction_items
                         (
@@ -41,11 +40,9 @@ function createTransaction(data) {
                         db.run(
                             `UPDATE products
                              SET stock = stock - ?
-                             WHERE id = ?`
+                             WHERE id = ?`,
                             [item.qty, item.id]
                         );
-
-                        console.log("test data:" + item.id);
                         
                         stmt.run([
                             transactionId,
@@ -227,21 +224,21 @@ function getReceipt(transactionId) {
     });
 }
 
-function getByDate(days) {
-    const db = getDB();
+// function getByDate(days) {
+//     const db = getDB();
     
-    return db.prepare(`
-        SELECT *
-        FROM transactions
-        WHERE date >= datetime('now', ?)
-        ORDER BY date DESC
-    `).all(`-${days} days`);
-}
+//     return db.prepare(`
+//         SELECT *
+//         FROM transactions
+//         WHERE date >= datetime('now', ?)
+//         ORDER BY date DESC
+//     `).all(`-${days} days`);
+// }
 
 module.exports = {
     createTransaction,
     getAll,
     getSummary,
-    getReceipt,
-    getByDate
+    getReceipt
+    // getByDate
 };

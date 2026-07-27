@@ -124,5 +124,16 @@ async function openReceipt(id){
 // print receipt
 async function printReceipt(id){
 
+    Toast.info('Menyiapkan printer...');
+    
     await window.api.printReceipt(id);
 }
+
+//detect if printing success
+window.api.onPrintSuccess((result) => {
+   
+    if(result.success)
+        Toast.success('Resi berhasil diprint!');
+    else
+        Toast.error(`Resi gagal diprint: ${result.errorType}`);
+});

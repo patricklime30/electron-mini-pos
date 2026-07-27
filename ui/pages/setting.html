@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniPOS | Pengaturan</title>
+    <link rel="stylesheet" href="../css/setting.css">
+    <link rel="stylesheet" href="../css/toast.css">
+    <link rel="stylesheet" href="../css/modal.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/password-input.css">
+</head>
+
+<body>
+    <div class="content">
+    <div class="content-inner">
+
+        <div class="settings-layout">
+
+            <!-- Sidebar -->
+            <aside class="settings-sidebar">
+
+                <div class="sidebar-header">
+                    <h2>Pengaturan</h2>
+                    <p>Kelola Akun dan Toko Anda.</p>
+                </div>
+
+                <div class="settings-nav">
+                    <button class="settings-link active">
+                        Akun
+                    </button>
+
+                    <button class="settings-link">
+                        Toko
+                    </button>
+
+                    <button class="settings-link">
+                        Hapus Data
+                    </button>
+                </div>
+
+            </aside>
+
+            <!-- Right Content -->
+            <div class="settings-content">
+
+                <!-- Account Information -->
+                <div class="settings-card">
+
+                    <h2>Informasi Akun</h2>
+                    <p>Lihat detail akun Anda.</p>
+
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input id="username" type="text" value="admin" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Hak Akses</label>
+                        <span id="userRole" class="role-badge">Admin</span>
+                    </div>
+
+                    <div class="settings-actions">
+                        <button class="btn-secondary" id="btnEditUsername">
+                            Ganti Username
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- Password Card -->
+                <div class="settings-card" style="margin-top:20px;">
+
+                    <h2>Password</h2>
+                    <p>Ubah password Anda.</p>
+
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" value="********" readonly>
+                    </div>
+
+                    <div class="settings-actions">
+                        <button class="btn-primary" id="btnUbahPassword">
+                            Ubah Password
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+    <script src="../js/toast.js"></script>
+    <script src="../js/password_input.js"></script>
+    <script src="../js/validation.js"></script>
+    <script src="../js/modal.js"></script>
+    <script src="../js/header.js"></script>
+    <script src="../js/setting.js"></script>
+</body>
+
+</html>

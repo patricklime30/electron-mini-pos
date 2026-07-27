@@ -65,8 +65,27 @@ contextBridge.exposeInMainWorld("api", {
         return ipcRenderer.invoke("receipt-ready");
     },
 
+    onPrintSuccess: (callback) => {
+        ipcRenderer.on("print-success", (event, result) => callback(result));
+    },
+
+    getStoreInfo: () => {
+        return ipcRenderer.invoke("get-store-info");
+    },
+
+    updateUsername: (data) => {
+        return ipcRenderer.invoke("update-username", data);
+    },
+
+    verifyPassword: (data) => {
+        return ipcRenderer.invoke("verify-password", data);
+    },
+
+    resetPassword: (data) => {
+        return ipcRenderer.invoke("reset-password", data);
+    },
+
     logout: () => {
         return ipcRenderer.invoke("logout");
     },
-
 });

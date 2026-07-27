@@ -12,8 +12,6 @@ const admin = require("./db/crud/users");
 const product = require("./db/crud/product");
 const transaction = require("./db/crud/transaction");
 
-// const { renderReceipt } = require("./ui/js/receipt");
-
 let mainWindow;
 let db;
 let currentUser = null;
@@ -78,6 +76,7 @@ ipcMain.handle("get:currentUser", () => {
 //logout process
 ipcMain.handle("logout", () => {
     currentUser = null;
+    
     return true;
 });
 
@@ -95,7 +94,7 @@ ipcMain.handle("get-specific-product", async (event, id) => {
 ipcMain.handle("add-update-product", async (event, data) => {
     const oldProduct = await product.getById(data.id);
 
-    let image = oldProduct.image ?? null; // keep old image by default if exists
+    let image = oldProduct?.image ?? null; // keep old image by default if exists
 
     // copy if new file image
     if (data.image) {
@@ -164,9 +163,10 @@ ipcMain.handle("get-receipt", async (event, id) => {
 ipcMain.handle("print-receipt", async (event, id) => {
     
     const printWindow = new BrowserWindow({
+        parent: mainWindow,
         width: 400,
         height: 700,
-        show: true,
+        show: false,
         webPreferences: {
             nodeIntegration: false,
             contextIsolation: true,
@@ -189,19 +189,62 @@ ipcMain.handle("receipt-ready", (event) =>{
 
     const win = BrowserWindow.fromWebContents(event.sender);
 
-    win.webContents.print(
-        {
-            silent:false
-        },
-        (success, errorType) => {
+    return new Promise((resolve) => {
+        win.webContents.print(
+            {
+                silent:false
+            },
+            (success, errorType) => {
 
-            console.log("Print finished:", success);
+                const parent = win.getParentWindow();
 
-            win.close()
+                console.log(parent);
 
-        });
+                if (parent) {
+                    console.log("hello");
+
+                    parent.webContents.send("print-success", {
+                        success,
+                        errorType,
+                    });
+                }
+
+                win.close()
+
+                resolve({
+                    success,
+                    errorType,
+                });
+            });
+    });
+
 });
 
+// get store data
+ipcMain.handle("get-store-info", async () => {
+    return await store.getStore();
+});
+
+// update username
+ipcMain.handle("update-username", async (event, data) => {
+    const newUser = await admin.updateUsername(data);
+
+    currentUser = newUser.user;
+
+    return newUser;
+});
+
+// verify password
+ipcMain.handle("verify-password", async (event, data) => {
+    return await admin.verifyPassword(data);
+
+});
+
+// reset password
+ipcMain.handle("reset-password", async (event, data) => {
+    return await admin.resetPassword(data);
+
+});
 
 app.on('ready', async () => {
     // 1. create DB connection

@@ -17,7 +17,7 @@ class Navbar {
                 <div class="user-menu">
                     <div class="user-btn">
                         <img src="../../images/user.png" class="avatar">
-                        <span>${user.username}</span>
+                        <span id="headerUsername">${user.username}</span>
                     </div>
 
                     <div class="dropdown">
@@ -25,14 +25,14 @@ class Navbar {
                             <img src="../../images/user.png" class="avatar-lg">
 
                             <div>
-                                <div class="name">${user.username}</div>
+                                <div id="profileUsername" class="name">${user.username}</div>
                                 <div class="role">${user.role}</div>
                             </div>
                         </div>
 
                         <div class="divider"></div>
 
-                        <div class="menu-item">Pengaturan</div>
+                        <div class="menu-item profile">Pengaturan</div>
                         <div class="menu-item logout">Keluar</div>
                     </div>
                 </div>
@@ -60,6 +60,7 @@ class Navbar {
         const dropdown = document.querySelector(".dropdown");
         const menu = document.querySelector(".user-menu");
         const logoutBtn = document.querySelector(".logout");
+        const settingBtn = document.querySelector(".profile");
         const navItems = document.querySelectorAll(".nav-item");
 
         btn.addEventListener("click", (e) => {
@@ -72,6 +73,10 @@ class Navbar {
             if (!menu.contains(e.target)) {
                 dropdown.classList.remove("show");
             }
+        });
+
+        settingBtn.addEventListener("click", () => {
+            window.location.href = 'setting.html';
         });
 
         logoutBtn.addEventListener("click", () => {

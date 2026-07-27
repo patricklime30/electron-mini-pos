@@ -282,7 +282,7 @@ function updateTotal() {
 }
 
 function openCheckout(){
-    if(cart.length < 0){
+    if(cart.length <= 0){
         Toast.error('Tidak ada produk di keranjang');
         return;
     }
@@ -347,12 +347,27 @@ async function confirmPurchase(){
         total
     });
 
-    console.log(result);
-
     await window.api.printReceipt(result.transaction_id);
+
+    Modal.close(modalPreview);
 
     cart = [];
     total = 0;
     paymentMethod = "";
     productArray = [];
+
+    loadProducts();
+    renderCart();
+
+    if(result)
+        Toast.success('Pesanan berhasil dibuat!');
 }
+
+//detect if printing success
+window.api.onPrintSuccess((result) => {
+
+    if(result.success)
+        Toast.success('Resi berhasil diprint!');
+    else
+        Toast.error(`Resi gagal diprint: ${result.errorType}`);
+});

@@ -5,128 +5,232 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MiniPOS | Receipt</title>
-
+    <link rel="stylesheet" href="../css/toast.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', sans-serif;
+        
+        /* ===========================
+        RECEIPT CONTAINER
+        =========================== */
+
+        .receipt {
+            width: min(100%, 80mm);
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            color:#374151;
+            font-family: Arial, Helvetica, sans-serif;
+            border-radius: 4px;
+            box-shadow:0 2px 10px rgba(0,0,0,.08);
         }
 
-        /* receipt */
-        .receipt-header{
-            text-align:center;
-            margin-bottom: 30px;
+        /* ===========================
+        HEADER
+        =========================== */
+
+        .receipt-header {
+            text-align: center;
+            margin-bottom: 16px;
         }
 
-        .receipt-header h2{
-            margin-bottom:5px;
+        .receipt-header h2 {
+            font-size: 18px;
+            font-weight:700;
+            letter-spacing:.4px;
+            margin-bottom: 4px;
         }
 
-        .receipt-header p{
-            margin:2px 0;
-            color:#666;
+        .receipt-header p,
+        .receipt-header small{
+            font-size:12px;
+            color: #6b7280;
         }
+
+        /* divider */
+        .receipt-header::after {
+            content: "";
+            display: block;
+            border-bottom:1px dashed #d1d5db;
+            margin-top: 14px;
+        }
+
+        /* DESC */
+        .orderDesc{
+            padding:10px 0 0 0;
+            font-size: 13px;
+        }
+
+        .orderDesc > div{
+            display:flex;
+            justify-content:space-between;
+            margin-bottom:8px;
+        }
+       
+        /* ===========================
+        ITEMS
+        =========================== */
 
         .receipt-items {
-            max-height:300px;
-            overflow-y:auto;
-            font-size: 14px;
+            max-height: 320px;
+            overflow-y: auto;
+            margin-top: 8px;
         }
 
         .receipt-item {
-            display:flex;
-            justify-content:space-between;
-            padding:12px 0;
-            border-bottom:1px solid #e5e7eb;
-        }
-
-        .receipt-summary {
-            margin-top:20px;
-            padding-top:15px;
-            border-top:1px solid #e5e7eb;
-        }
-
-        .receipt-summary > div {
-            display:flex;
-            justify-content:space-between;
-            margin-bottom:10px;
-            font-weight:600;
-            color:#374151;
-            font-size:14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom:1px dashed #e5e7eb;
         }
 
         .item-info {
-            display:flex;
-            flex-direction:column;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
         }
 
         .item-name {
-            font-weight:600;
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 2px;
         }
 
         .item-qty {
-            color:#6b7280;
-            font-size:13px;
+            color: #6b7280;
+            font-size: 12px;
         }
 
-        .total-row #orderTotal {
-            font-size:22px;
+        .item-total {
+            font-weight: 700;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        /* ===========================
+        SUMMARY
+        =========================== */
+
+        .receipt-summary {
+            margin-top: 14px;
+            padding-top: 12px;
+            border-top: 2px dashed #d1d5db;
+        }
+
+        .receipt-summary > div {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .receipt-summary span:first-child {
+            color: #4b5563;
+        }
+
+        .total-row {
+            margin-top: 10px;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .total-row span:first-child {
+            font-size: 16px;
+            color: #111827;
+        }
+
+        #orderTotal {
+            font-size: 16px;
+            font-weight: 700;
             color:#0f766e;
         }
 
+        /* ===========================
+        SCROLLBAR
+        =========================== */
+
+        .receipt-items::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .receipt-items::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        /* ===========================
+        PRINT
+        =========================== */
+
         @media print {
+
+            @page {
+                size: 80mm auto;
+                margin: 0;
+            }
 
             body {
                 background: white;
                 padding: 0;
+                display: block;
             }
 
             .receipt {
-                width: 100%;
-                box-shadow: none;
+                width: 80mm;
+                margin: 0;
+                padding: 10px;
                 border-radius: 0;
+                box-shadow: none;
             }
 
+            .receipt-items {
+                max-height: none;
+                overflow: visible;
+            }
         }
     </style>
 
 </head>
 
 <body>
-    <div class="receipt-header">
-        <h2 id="storeName"></h2>
-        <p id="storeAddress"></p>
-        <small id="storePhone"></small>
-    </div>
-
-    <div id="orderItems" class="receipt-items">
-        <!-- items injected here -->
-    </div>
-
-    <div class="receipt-summary">
-
-        <div>
-            <span>Tanggal</span>
-            <span id="orderDate"></span>
+    <div class="receipt">
+        <div class="receipt-header">
+            <h2 id="storeName"></h2>
+            <p id="storeAddress"></p>
+            <small id="storePhone"></small>
         </div>
 
-        <div>
-            <span>Metode</span>
-            <span id="orderPayment"></span>
+        <div class="orderDesc">
+            <div>
+                <span>Tanggal</span>
+                <span id="orderDate"></span>
+            </div>
+
+            <div>
+                <span>Metode</span>
+                <span id="orderPayment"></span>
+            </div>
         </div>
 
-        <div class="total-row">
-            <span>Total</span>
-            <span id="orderTotal">
-                Rp 0
-            </span>
+        <div id="orderItems" class="receipt-items">
+            <!-- items injected here -->
         </div>
 
+        <div class="receipt-summary">
+
+            <div class="total-row">
+                <span>Total</span>
+                <span id="orderTotal">
+                    Rp 0
+                </span>
+            </div>
+
+        </div>
     </div>
 
     <script src="../js/utils.js"></script>
+    <script src="../js/toast.js"></script>
     <script src="../js/receipt.js"></script>
 </body>
 

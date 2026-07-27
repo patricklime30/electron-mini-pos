@@ -25,11 +25,26 @@ function isSetupDone() {
 function finishSetup() {
     const db = getDB();
     
-    db.prepare(`
-        INSERT INTO settings (key, value)
-        VALUES (?, ?)
-        ON CONFLICT(key) DO UPDATE SET value = excluded.value
-    `).run("is_setup_done", 1);
+    return new Promise((resolve, reject) => {
+        db.run(`
+            INSERT INTO settings (key, value)
+            VALUES (?, ?)
+            ON CONFLICT(key) DO UPDATE SET value = excluded.value
+        `,
+        ["is_setup_done", 1],
+        
+        function (err){
+            if (err) {
+                return reject(err);
+            }
+
+            resolve({
+                action: "Setup selesai dibuat"
+            });
+
+        });
+
+    });
 }
 
 module.exports = { isSetupDone, finishSetup };
