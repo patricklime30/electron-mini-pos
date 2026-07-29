@@ -225,6 +225,11 @@ ipcMain.handle("get-store-info", async () => {
     return await store.getStore();
 });
 
+// update store data
+ipcMain.handle("update-store-info", async (event, data) => {
+    return await store.update(data);
+});
+
 // update username
 ipcMain.handle("update-username", async (event, data) => {
     const newUser = await admin.updateUsername(data);
@@ -244,6 +249,11 @@ ipcMain.handle("verify-password", async (event, data) => {
 ipcMain.handle("reset-password", async (event, data) => {
     return await admin.resetPassword(data);
 
+});
+
+// delete all data or factory reset
+ipcMain.handle("delete-all-data", async () => {
+    return await setup.deleteAllData();
 });
 
 app.on('ready', async () => {

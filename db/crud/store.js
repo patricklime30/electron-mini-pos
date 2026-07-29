@@ -37,25 +37,25 @@ function create(data) {
     });
 }
 
-function update(id, data) {
+function update(data) {
     const db = getDB();
 
     return new Promise((resolve, reject) => {
 
         db.run(`
-            UPDATE products
+            UPDATE stores
             SET name = ?, phone = ?, address = ?
             WHERE id = ?
         `,
-        [data.name, data.phone, data.address, id],
+        [data.name, data.phone, data.address, data.id],
         
         function (err) {
             if (err) return reject(err);
 
             resolve({
-                action: "Toko berhasil diperbarui",
+                msg: "Toko berhasil diperbarui",
                 id: data.id,
-                changes: this.changes
+                success: true
             });
         });
     });

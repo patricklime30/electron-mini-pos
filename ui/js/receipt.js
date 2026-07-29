@@ -2,7 +2,7 @@ async function renderReceipt(id){
     const receipt = await window.api.getReceipt(id);
 
     document.getElementById("storeName").innerText = receipt.store['name'];
-    document.getElementById("storePhone").innerText = receipt.store['phone'];
+    document.getElementById("storePhone").innerText = `Telp: ${receipt.store['phone']}`;
     document.getElementById("storeAddress").innerText = receipt.store['address'];
 
     const container = document.getElementById("orderItems");

@@ -14,76 +14,130 @@
 
 <body>
     <div class="content">
-    <div class="content-inner">
+        <div class="content-inner">
 
-        <div class="settings-layout">
+            <div class="settings-layout">
 
-            <!-- Sidebar -->
-            <aside class="settings-sidebar">
+                <!-- Sidebar -->
+                <aside class="settings-sidebar">
 
-                <div class="sidebar-header">
-                    <h2>Pengaturan</h2>
-                    <p>Kelola Akun dan Toko Anda.</p>
-                </div>
-
-                <div class="settings-nav">
-                    <button class="settings-link active">
-                        Akun
-                    </button>
-
-                    <button class="settings-link">
-                        Toko
-                    </button>
-
-                    <button class="settings-link">
-                        Hapus Data
-                    </button>
-                </div>
-
-            </aside>
-
-            <!-- Right Content -->
-            <div class="settings-content">
-
-                <!-- Account Information -->
-                <div class="settings-card">
-
-                    <h2>Informasi Akun</h2>
-                    <p>Lihat detail akun Anda.</p>
-
-                    <div class="form-group">
-                        <label>Username</label>
-                        <input id="username" type="text" value="admin" readonly>
+                    <div class="sidebar-header">
+                        <h2>Pengaturan</h2>
+                        <p>Kelola Akun dan Toko Anda.</p>
                     </div>
 
-                    <div class="form-group">
-                        <label>Hak Akses</label>
-                        <span id="userRole" class="role-badge">Admin</span>
-                    </div>
+                    <div class="settings-nav">
+                        <button class="settings-link active" data-target="account">
+                            Akun
+                        </button>
 
-                    <div class="settings-actions">
-                        <button class="btn-secondary" id="btnEditUsername">
-                            Ganti Username
+                        <button class="settings-link" data-target="store">
+                            Toko
+                        </button>
+
+                        <button class="settings-link" data-target="delete">
+                            Hapus Data
                         </button>
                     </div>
 
-                </div>
+                </aside>
 
-                <!-- Password Card -->
-                <div class="settings-card" style="margin-top:20px;">
+                <!-- Right Content -->
+                <div class="settings-content">
 
-                    <h2>Password</h2>
-                    <p>Ubah password Anda.</p>
+                    <!-- Account -->
+                    <div class="settings-panel active" id="account">
+                        <!-- Account Information -->
+                        <div class="settings-card">
 
-                    <div class="form-group">
-                        <label>Password</label>
-                        <input type="password" value="********" readonly>
+                            <h2>Informasi Akun</h2>
+                            <p>Lihat detail akun Anda.</p>
+
+                            <div class="form-group">
+                                <label>Username</label>
+                                <input id="username" type="text" value="admin" readonly>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Hak Akses</label>
+                                <span id="userRole" class="role-badge">Admin</span>
+                            </div>
+
+                            <div class="settings-actions">
+                                <button class="btn-secondary" id="btnEditUsername">
+                                    Ganti Username
+                                </button>
+                            </div>
+
+                        </div>
+
+                        <!-- Password Card -->
+                        <div class="settings-card" style="margin-top:20px;">
+
+                            <h2>Password</h2>
+                            <p>Ubah password Anda.</p>
+
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" value="********" readonly>
+                            </div>
+
+                            <div class="settings-actions">
+                                <button class="btn-primary" id="btnUbahPassword">
+                                    Ubah Password
+                                </button>
+                            </div>
+
+                        </div>
                     </div>
 
-                    <div class="settings-actions">
-                        <button class="btn-primary" id="btnUbahPassword">
-                            Ubah Password
-                        </button>
+                    <!-- Store -->
+                    <div class="settings-panel" id="store">
+
+                        <div class="settings-card">
+                            <h2>Pengaturan Toko</h2>
+                            <p>Kelola informasi toko Anda.</p>
+
+                            <div class="form-group">
+                                <label>Nama Toko</label>
+
+                                <input type="text" id="storeName" placeholder="Contoh: Toko Maju Jaya" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Nomor Telepon</label>
+
+                                <input type="text" id="storePhone" placeholder="08123456789">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Alamat Toko</label>
+
+                                <textarea id="storeAddress" rows="4"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="settings-actions">
+                            <button class="btn-primary" id="btnUbahToko">
+                                Update Toko
+                            </button>
+                        </div>
+
+                    </div>
+
+                    <!-- Delete -->
+                    <div class="settings-panel" id="delete">
+
+                        <div class="settings-card">
+                            <h2>Hapus Data</h2>
+                            <p>Semua data yang dihapus tidak dapat dikembalikan.</p>
+
+                            <button id="btnResetData" class="btn-danger">
+                                Hapus Semua Data
+                            </button>
+
+                        </div>
+
                     </div>
 
                 </div>
@@ -91,9 +145,7 @@
             </div>
 
         </div>
-
     </div>
-</div>
 
     <script src="../js/toast.js"></script>
     <script src="../js/password_input.js"></script>

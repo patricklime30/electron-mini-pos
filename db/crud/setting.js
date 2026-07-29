@@ -47,4 +47,30 @@ function finishSetup() {
     });
 }
 
-module.exports = { isSetupDone, finishSetup };
+function deleteAllData(){
+    const db = getDB();
+
+    return new Promise((resolve, reject) => {
+        db.exec(`
+            DELETE FROM products;
+            DELETE FROM users;
+            DELETE FROM transactions;
+            DELETE FROM stores;
+            DELETE FROM transaction_items;
+            DELETE FROM settings;
+        `,
+        (err) => {
+            if (err) {
+                return reject(err);
+            }
+
+            resolve({
+                msg: "Data telah terhapus"
+            });
+
+        });
+
+    });
+}
+
+module.exports = { isSetupDone, finishSetup, deleteAllData };

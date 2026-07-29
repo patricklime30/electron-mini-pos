@@ -104,6 +104,14 @@ body{
     flex:1;
 }
 
+.settings-panel {
+    display: none;
+}
+
+.settings-panel.active {
+    display: block;
+}
+
 .settings-card{
     background:#fff;
     border:1px solid #e5e7eb;

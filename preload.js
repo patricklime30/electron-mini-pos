@@ -73,6 +73,10 @@ contextBridge.exposeInMainWorld("api", {
         return ipcRenderer.invoke("get-store-info");
     },
 
+    updateStoreInfo: (data) => {
+        return ipcRenderer.invoke("update-store-info", data);
+    },
+
     updateUsername: (data) => {
         return ipcRenderer.invoke("update-username", data);
     },
@@ -83,6 +87,10 @@ contextBridge.exposeInMainWorld("api", {
 
     resetPassword: (data) => {
         return ipcRenderer.invoke("reset-password", data);
+    },
+
+    resetAllData: () => {
+        return ipcRenderer.invoke("delete-all-data");
     },
 
     logout: () => {
