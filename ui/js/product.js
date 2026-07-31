@@ -14,6 +14,14 @@ let priceInput;
 let stockInput;
 let imageInput;
 
+const state = {
+    search: "",
+    payment: "",
+    date: "",
+    page: 1,
+    limit: 10
+};
+
 document.addEventListener("DOMContentLoaded", async () => {
     const user = await window.api.getCurrentUser();
 
@@ -224,6 +232,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
     loadProducts();
+
+    // Initialize toolbar
+    TableToolbar.init({
+        id: "product-toolbar",
+        onSearch(value) {
+            state.search = value;
+            state.page = 1;
+            loadProducts();
+        },
+
+    });
+
+    // initialize pagination
+    TablePagination.init({
+        id: "product-pagination",
+        currentPage: 1,
+        totalPages: 1,
+        onChange(page) {
+            state.page = page;
+            loadProducts();
+        }
+
+    });
 });
 
 // click add button
@@ -258,11 +289,53 @@ async function loadProducts(){
 
     const products = await window.api.getAllProduct();
 
+    let filtered = products;
+
+    // SEARCH
+    if(state.search){
+
+        const keyword = state.search.toLowerCase();
+
+        filtered = filtered.filter(trans => {
+            return (
+                trans.name.toLowerCase().includes(keyword) ||
+                trans.stock.toString().includes(keyword)
+            );
+        });
+
+    }
+
+    const totalPages = Math.ceil(filtered.length / state.limit);
+
+    // avoid page going beyond total pages
+    if(state.page > totalPages){
+        state.page = 1;
+    }
+
+    // PAGINATION
+    const start = (state.page - 1) * state.limit;
+
+    const result = filtered.slice(start, start + state.limit);
+
     const tbody = document.getElementById("productTable");
 
     tbody.innerHTML = "";
 
-    products.forEach(product=>{
+    // No data
+    if (result.length === 0) {
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="5" class="no-data">
+                    Produk tidak ditemukan
+                </td>
+            </tr>
+        `;
+
+        return;
+    }
+
+    result.forEach(product=>{
 
         tbody.innerHTML += `
             <tr>
@@ -308,6 +381,12 @@ async function loadProducts(){
             </tr>
         `;
 
+    });
+
+    TablePagination.update({
+        id: "product-pagination",
+        currentPage: state.page,
+        totalPages: totalPages
     });
 
 }

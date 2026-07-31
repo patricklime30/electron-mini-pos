@@ -9,6 +9,14 @@ let paymentMethod = null;
 let checkoutModal = null;
 let previewModal = null;
 
+const state = {
+    search: "",
+    payment: "",
+    date: "",
+    page: 1,
+    limit: 10
+};
+
 document.addEventListener("DOMContentLoaded", async () => {
     const user = await window.api.getCurrentUser();
 
@@ -119,6 +127,29 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     loadProducts();
+
+    // Initialize toolbar
+    TableToolbar.init({
+        id: "dashboard-toolbar",
+        onSearch(value) {
+            state.search = value;
+            state.page = 1;
+            loadProducts();
+        },
+
+    });
+
+    // initialize pagination
+    TablePagination.init({
+        id: "dashboard-pagination",
+        currentPage: 1,
+        totalPages: 1,
+        onChange(page) {
+            state.page = page;
+            loadProducts();
+        }
+
+    });
 });
 
 // format number shorter to easily read
@@ -148,9 +179,49 @@ async function loadProducts(){
 
     productArray = products;
 
+    let filtered = products;
+
+    // SEARCH
+    if(state.search){
+
+        const keyword = state.search.toLowerCase();
+
+        filtered = filtered.filter(trans => {
+            return (
+                trans.name.toLowerCase().includes(keyword) ||
+                trans.stock.toString().includes(keyword)
+            );
+        });
+
+    }
+
+    const totalPages = Math.ceil(filtered.length / state.limit);
+
+    // avoid page going beyond total pages
+    if(state.page > totalPages){
+        state.page = 1;
+    }
+
+    // PAGINATION
+    const start = (state.page - 1) * state.limit;
+
+    const result = filtered.slice(start, start + state.limit);
+
     productList.innerHTML = "";
 
-    products.forEach(product=>{
+    // No data
+    if (result.length === 0) {
+
+        productList.innerHTML = `
+            <div class="no-data">
+                Produk tidak ditemukan
+            </div>
+        `;
+
+        return;
+    }
+
+    result.forEach(product=>{
         const item = cart.find(c => c.id === product.id);
         const qty = item ? item.qty : 0;
 
@@ -185,6 +256,12 @@ async function loadProducts(){
            
         `;
 
+    });
+
+    TablePagination.update({
+        id: "dashboard-pagination",
+        currentPage: state.page,
+        totalPages: totalPages
     });
 
 }

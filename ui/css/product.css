@@ -111,6 +111,13 @@ body{
     content: "⚠";
 }
 
+.no-data {
+    text-align: center;
+    padding: 40px;
+    color: #6b7280;
+    font-size: 14px;
+}
+
 /* EDIT / DELETE */
 .btn-edit {
     background: #e0f2fe;
