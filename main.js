@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 
 const path = require("path");
 const fs = require("fs");
@@ -11,6 +11,7 @@ const store = require("./db/crud/store");
 const admin = require("./db/crud/users");
 const product = require("./db/crud/product");
 const transaction = require("./db/crud/transaction");
+const {exportOrders} = require("./exporter/excel-exporter");
 
 let mainWindow;
 let db;
@@ -249,6 +250,42 @@ ipcMain.handle("verify-password", async (event, data) => {
 ipcMain.handle("reset-password", async (event, data) => {
     return await admin.resetPassword(data);
 
+});
+
+// export transaction data in excel
+ipcMain.handle("export-transaction-excel", async (event, data) => {
+    const now = new Date();
+
+    const pad = (n) => String(n).padStart(2, "0");
+
+    const timestamp =
+        `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}${pad(now.getSeconds())}`;
+
+    const fileName = `riwayat-transaksi-${timestamp}.xlsx`;
+
+    const result = await dialog.showSaveDialog({
+                        defaultPath: path.join(
+                            app.getPath("downloads"),
+                            fileName
+                        ),
+                        filters: [
+                            { name: "Excel", extensions: ["xlsx"] }
+                        ]
+                    });
+
+    if (result.canceled) {
+        return {
+            success: false,
+            msg: "Export gagal"
+        };
+    }
+    
+    await exportOrders(data, result.filePath);
+   
+    return {
+        success: true,
+        msg: "Export berhasil"
+    };
 });
 
 // delete all data or factory reset

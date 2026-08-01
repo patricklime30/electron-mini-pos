@@ -3,9 +3,11 @@ class TableToolbar {
     static init({
         id = "table-controls",
         isFilter = false,
+        isExport = false,
         onSearch = () => {},
         onDateChange = () => {},
-        onPaymentChange = () => {}
+        onPaymentChange = () => {},
+        onExportExcel = () => {}
     } = {}) {
 
         const container = document.getElementById(id);
@@ -64,9 +66,15 @@ class TableToolbar {
                             </option>
 
                         </select>` : ''
-                        }
+                    }
 
                 </div>
+
+                ${isExport ? `
+                    <button id="excelBtn" class="export-btn">
+                        Export Excel
+                    </button>` : ''
+                }
             </div>
         `;
 
@@ -88,6 +96,15 @@ class TableToolbar {
             payment.addEventListener("change", e => {
                 onPaymentChange(e.target.value);
             });
+        }
+
+        if(isExport){
+            const btn = document.getElementById("excelBtn");
+
+            btn.addEventListener("click", e => {
+                onExportExcel();
+            });
+
         }
     }
 }

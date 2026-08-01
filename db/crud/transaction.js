@@ -224,21 +224,9 @@ function getReceipt(transactionId) {
     });
 }
 
-// function getByDate(days) {
-//     const db = getDB();
-    
-//     return db.prepare(`
-//         SELECT *
-//         FROM transactions
-//         WHERE date >= datetime('now', ?)
-//         ORDER BY date DESC
-//     `).all(`-${days} days`);
-// }
-
 module.exports = {
     createTransaction,
     getAll,
     getSummary,
     getReceipt
-    // getByDate
 };

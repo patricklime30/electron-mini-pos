@@ -50,6 +50,20 @@
     outline: none;
 }
 
+/* EXPORT BUTTON */
+.export-btn {
+    background: #0f766e;
+    color: white;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.export-btn:hover {
+    background: #115e59;
+}
+
 /* =========================
    PAGINATION
 ========================= */

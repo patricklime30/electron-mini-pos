@@ -7,7 +7,8 @@ const state = {
     payment: "",
     date: "",
     page: 1,
-    limit: 10
+    limit: 10,
+    orderData: null
 };
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -54,6 +55,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     TableToolbar.init({
         id: "order-toolbar",
         isFilter: true,
+        isExport: true,
         onSearch(value) {
             state.search = value;
             state.page = 1;
@@ -68,6 +70,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             state.payment = value;
             state.page = 1;
             loadTransactions();
+        },
+        onExportExcel(){
+            exportTransaction();
         }
 
     });
@@ -131,6 +136,8 @@ async function loadTransactions(){
     const start = (state.page - 1) * state.limit;
 
     const result = filtered.slice(start, start + state.limit);
+
+    state.orderData = filtered;
 
     const tbody = document.getElementById("transactionTable");
 
@@ -309,3 +316,22 @@ window.api.onPrintSuccess((result) => {
     else
         Toast.error(`Resi gagal diprint: ${result.errorType}`);
 });
+
+// export excel
+async function exportTransaction(){
+    
+    Toast.info('Memulai export data...');
+    
+    try{
+        const result = await window.api.exportExcel(state.orderData);
+
+        if(result.success)
+            Toast.success(result.msg);
+        else
+            Toast.error(result.msg);
+    }
+    catch(err){
+        Toast.error(err);
+    }
+    
+}

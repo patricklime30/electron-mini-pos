@@ -93,6 +93,10 @@ contextBridge.exposeInMainWorld("api", {
         return ipcRenderer.invoke("delete-all-data");
     },
 
+    exportExcel: (data) => {
+        return ipcRenderer.invoke("export-transaction-excel", data);
+    },
+
     logout: () => {
         return ipcRenderer.invoke("logout");
     },
