@@ -155,7 +155,7 @@ document.getElementById("btnNext").addEventListener("click", async () => {
         const result = await window.api.setupComplete(setupData);
 
         if(result.success)
-            window.location.href = "dashboard.html";
+            window.location.href = "login.html";
         else
             Toast.error(result.error);
 
