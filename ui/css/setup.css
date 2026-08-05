@@ -221,6 +221,53 @@ textarea{
     border-radius: 50%;
 }
 
+/* recovery key */
+.recovery-box{
+    margin:24px 0;
+    padding:20px;
+    border:1px solid #facc15;
+    background:#fffbea;
+    border-radius:12px;
+    text-align:left;
+}
+
+.recovery-header h3{
+    margin:0 0 10px;
+}
+
+.recovery-header p{
+    margin:0;
+    font-size:14px;
+    color:#555;
+    line-height:1.6;
+}
+
+.recovery-key{
+    margin:18px 0;
+    padding:16px;
+    background:#fff;
+    border:2px dashed #d1d5db;
+    border-radius:10px;
+    text-align:center;
+    font-size:20px;
+    font-weight:700;
+    letter-spacing:2px;
+    font-family:monospace;
+}
+
+.confirm-save{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    margin: 8px;
+}
+
+.confirm-save input{
+    width: 20px;
+    height: 20px;
+}
+
 @keyframes fadeIn {
     from {
         opacity: 0;

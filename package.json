@@ -1,19 +1,31 @@
 {
   "name": "MiniPOS",
   "version": "1.0.0",
-  "description": "",
+  "description": "Mini POS application to track order and report for small business.",
   "license": "ISC",
-  "author": "",
+  "author": "patrick",
   "type": "commonjs",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "build": "electron-builder",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "build": {
+    "appId": "com.minipos.app",
+    "productName": "MiniPOS",
+    "win": {
+      "target": "nsis"
+    },
+    "icon": "images/logo.png"
+  },
   "dependencies": {
-    "bcrypt": "^6.0.0",
-    "electron": "^42.4.1",
+    "bcryptjs": "^3.0.3",
     "exceljs": "^4.4.0",
     "sqlite3": "^6.0.1"
+  },
+  "devDependencies": {
+    "electron": "^42.4.1",
+    "electron-builder": "^26.15.3"
   }
 }

@@ -105,50 +105,54 @@ function getAll() {
 }
 
 // summary
-function getSummary() {
+function getSummary(filter = "") {
     const db = getDB();
 
     return new Promise((resolve, reject) => {
+        let whereClause = "";
+
+        switch (filter) {
+            case "today":
+                whereClause = "WHERE DATE(created_at) = DATE('now', 'localtime')";
+                break;
+
+            case "yesterday":
+                whereClause = "WHERE DATE(created_at) = DATE('now', '-1 day', 'localtime')";
+                break;
+
+            case "weekly":
+                whereClause = `
+                    WHERE DATE(created_at)
+                    BETWEEN DATE('now', 'weekday 0', '-6 days', 'localtime')
+                    AND DATE('now', 'localtime')
+                `;
+                break;
+
+            case "monthly":
+                whereClause = `
+                    WHERE strftime('%Y-%m', created_at)
+                    = strftime('%Y-%m', 'now', 'localtime')
+                `;
+                break;
+
+            default:
+                whereClause = "";
+        }
+
         db.get(
             `
-            SELECT COUNT(*) AS total FROM transactions
+            SELECT
+                COUNT(*) AS totalTransactions,
+                IFNULL(SUM(CASE WHEN payment_method='cash' THEN subtotal END), 0) AS totalCash,
+                IFNULL(SUM(CASE WHEN payment_method='transfer' THEN subtotal END), 0) AS totalTransfer
+            FROM transactions
+            ${whereClause}
             `,
             [],
-            (err, totalTransactions) => {
+            (err, row) => {
                 if (err) return reject(err);
 
-                db.get(
-                    `
-                    SELECT IFNULL(SUM(subtotal),0) AS total
-                    FROM transactions
-                    WHERE payment_method='cash'
-                    `,
-                    [],
-                    (err, totalCash) => {
-
-                        if (err) return reject(err);
-
-                        db.get(
-                            `
-                            SELECT IFNULL(SUM(subtotal),0) AS total
-                            FROM transactions
-                            WHERE payment_method='transfer'
-                            `,
-                            [],
-                            (err, totalTransfer) => {
-
-                                if (err) return reject(err);
-
-                                resolve({
-                                    totalTransactions,
-                                    totalCash,
-                                    totalTransfer
-                                });
-
-                            }
-                        );
-                    }
-                );
+                resolve(row);
             }
         );
     });

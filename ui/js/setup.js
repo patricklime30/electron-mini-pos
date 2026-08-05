@@ -44,15 +44,26 @@ function updateButtons(step) {
     backBtn.style.cursor = step === 1 ? "not-allowed" : "pointer";
 
     // LAST STEP change button text
-    if (step === 4) {
-        nextBtn.textContent = "Masuk Dashboard";
+    if (step === 3) {
+        nextBtn.textContent = "Selesai";
+
+        // checklist recovery key 
+        const checkbox = document.getElementById("confirmRecovery");
+
+        // Set initial state
+        nextBtn.disabled = !checkbox.checked;
+
+        // Use onchange so it replaces any previous handler
+        checkbox.onchange = () => {
+            nextBtn.disabled = !checkbox.checked;
+        };
     } else {
         nextBtn.textContent = "Lanjut";
     }
 }
 
 // show current step page
-function showStep(step) {
+async function showStep(step) {
 
     document.querySelectorAll(".step-page").forEach(page => {
             page.classList.remove("active");
@@ -65,6 +76,18 @@ function showStep(step) {
     updateButtons(step);
 
     currentStep = step;
+
+    if(step === 3){
+        const result = await window.api.generateRecoveryKey();
+
+        if(result.error){
+            Toast.error(result.error);
+            
+            return;
+        }
+
+        document.getElementById("recoveryKey").textContent = result.recoveryKey;
+    }
 }
 
 // create password input
@@ -82,7 +105,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("password-area").appendChild(passwordInput);
     document.getElementById("confirm-password-area").appendChild(confirmPasswordInput);
-
 });
 
 updateButtons(currentStep);
@@ -152,6 +174,7 @@ document.getElementById("btnNext").addEventListener("click", async () => {
     }
 
     if (currentStep === 3) {
+
         const result = await window.api.setupComplete(setupData);
 
         if(result.success)

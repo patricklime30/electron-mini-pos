@@ -1,5 +1,5 @@
 const {getDB} = require("../init");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 function getCredentials(username, password) {
     const db = getDB();
@@ -129,7 +129,7 @@ function verifyPassword(data) {
                 if (!row) {
                     return resolve({
                         success: false,
-                        message: "Akun tidak ditemukan"
+                        msg: "Akun tidak ditemukan"
                     });
                 }
 

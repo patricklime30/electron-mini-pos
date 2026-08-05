@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 
 const path = require("path");
 const fs = require("fs");
+const { pathToFileURL } = require("url");
 
 const { initDB } = require("./db/init");
 const { createSchema } = require("./db/schema");
@@ -58,6 +59,25 @@ ipcMain.handle("setup:complete", async (event, data) => {
     }
 });
 
+// generate recovery key process
+ipcMain.handle("generate-recovery-key", async () => {
+
+    try {
+        return await setup.generateRecoveryKey();
+
+    } catch (err) {
+        return {
+            error: err.message
+        };
+    }
+});
+
+// verify recovery key process
+ipcMain.handle("verify-recovery-key", async (event, recoveryKey) => {
+
+    return await setup.verifyRecovery(recoveryKey);
+});
+
 // login process
 ipcMain.handle("check:login", async (event, data) => {
     const loggedStatus = await admin.getCredentials(data.username, data.password);
@@ -101,7 +121,7 @@ ipcMain.handle("add-update-product", async (event, data) => {
     if (data.image) {
         const source = data.image;
 
-        const uploadFolder = path.join(__dirname, "uploads");
+        const uploadFolder = path.join(app.getPath("userData"), "uploads");
 
         if (!fs.existsSync(uploadFolder)) {
             fs.mkdirSync(uploadFolder);
@@ -117,10 +137,10 @@ ipcMain.handle("add-update-product", async (event, data) => {
         // store the updated path
         data.image = "uploads/" + fileName;
 
-        // remove old image from folder
+        // remove old image from folder call app.getPath("userData") since folder created outside project
         if (image) {
 
-            const oldPath = path.join(__dirname, image);
+            const oldPath = path.join(app.getPath("userData"), image);
 
             if (fs.existsSync(oldPath)) {
                 fs.unlinkSync(oldPath);
@@ -133,6 +153,18 @@ ipcMain.handle("add-update-product", async (event, data) => {
 
     return await product.createOrUpdate(data);
     
+});
+
+// get image path
+ipcMain.handle("get-image-url", (event, filename) => {
+    const imagePath = path.join(app.getPath("userData"), filename);
+
+    if (filename && fs.existsSync(imagePath)) {
+        return pathToFileURL(imagePath).href;
+    }
+
+    // if image not exist
+    return path.join(__dirname, "images", "image-not-found.png");
 });
 
 // delete specific product
@@ -151,8 +183,8 @@ ipcMain.handle("get-all-transaction", async () => {
 });
 
 //get transaction summary
-ipcMain.handle("get-transaction-summary", async () => {
-    return await transaction.getSummary();
+ipcMain.handle("get-transaction-summary", async (event, filterDate) => {
+    return await transaction.getSummary(filterDate);
 });
 
 // get transaction receipt

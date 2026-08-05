@@ -65,6 +65,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             state.date = value;
             state.page = 1;
             loadTransactions();
+            loadSummary();
         },
         onPaymentChange(value) {
             state.payment = value;
@@ -277,15 +278,15 @@ function filterByDate(transactions, range) {
 
 // load summary overview
 async function loadSummary() {
-    const summary = await window.api.getTransactionSummary();
+    const summary = await window.api.getTransactionSummary(state.date);
 
     const values = document.querySelectorAll(".summary-value");
 
-    values[0].textContent = summary.totalTransactions['total'];
+    values[0].textContent = summary.totalTransactions;
     values[1].textContent =
-        "Rp " + summary.totalCash['total'].toLocaleString("id-ID");
+        "Rp " + summary.totalCash.toLocaleString("id-ID");
     values[2].textContent =
-        "Rp " + summary.totalTransfer['total'].toLocaleString("id-ID");
+        "Rp " + summary.totalTransfer.toLocaleString("id-ID");
 }
 
 // open receipt modal

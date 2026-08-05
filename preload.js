@@ -5,6 +5,14 @@ contextBridge.exposeInMainWorld("api", {
         return ipcRenderer.invoke("setup:complete", data);
     },
 
+    generateRecoveryKey: () => {
+        return ipcRenderer.invoke("generate-recovery-key");
+    },
+
+    verifyRecovery: (recoveryKey) => {
+        return ipcRenderer.invoke("verify-recovery-key", recoveryKey);
+    },
+
     checkLogin: (data) => {
         return ipcRenderer.invoke("check:login", data);
     },
@@ -19,6 +27,10 @@ contextBridge.exposeInMainWorld("api", {
 
     getFilePath: (file) => {
         return webUtils.getPathForFile(file);
+    },
+
+    getImagePath: (filename) => {
+        return ipcRenderer.invoke("get-image-url", filename);
     },
 
     getAllProduct: () => {
@@ -41,8 +53,8 @@ contextBridge.exposeInMainWorld("api", {
         return ipcRenderer.invoke("get-all-transaction");
     },
 
-    getTransactionSummary: () => {
-        return ipcRenderer.invoke("get-transaction-summary");
+    getTransactionSummary: (filterDate) => {
+        return ipcRenderer.invoke("get-transaction-summary", filterDate);
     },
 
     getReceipt: (id) => {

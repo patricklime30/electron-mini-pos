@@ -221,17 +221,19 @@ async function loadProducts(){
         return;
     }
 
-    result.forEach(product=>{
+    result.map( async(product)=>{
         const item = cart.find(c => c.id === product.id);
         const qty = item ? item.qty : 0;
+
+        const imagePath = await window.api.getImagePath(product.image);
+
+        console.log(imagePath);
 
         productList.innerHTML += `
             <div class="product-card">
                 
                 <img 
-                    src="${product.image 
-                        ? `../../${product.image}` 
-                        : "../../images/image-not-found.png"}" 
+                    src="${imagePath}" 
                     alt="${product.name}"
                     class="product-img"
                 >

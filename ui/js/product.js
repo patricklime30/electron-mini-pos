@@ -139,11 +139,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const file = imageInput.files[0];
 
-            if (file) {
+            if (file)
                 selectedImage = window.api.getFilePath(file);
-
-                console.log(selectedImage);
-            }
 
         });
         
@@ -335,15 +332,15 @@ async function loadProducts(){
         return;
     }
 
-    result.forEach(product=>{
+    result.map( async(product)=>{
+
+        const imagePath = await window.api.getImagePath(product.image);
 
         tbody.innerHTML += `
             <tr>
                 <td>
                     <img 
-                        src="${product.image 
-                            ? `../../${product.image}` 
-                            : "../../images/image-not-found.png"}" 
+                        src="${imagePath}" 
                         alt="${product.name}"
                         class="product-img"
                     >
