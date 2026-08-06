@@ -227,8 +227,6 @@ async function loadProducts(){
 
         const imagePath = await window.api.getImagePath(product.image);
 
-        console.log(imagePath);
-
         productList.innerHTML += `
             <div class="product-card">
                 
@@ -321,7 +319,6 @@ function renderCart() {
     });
 
     updateTotal();
-    loadProducts(); //refresh product table
 }
 
 function increaseQty(id) {

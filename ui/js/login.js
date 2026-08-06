@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // create update username modal
-    usernameModal = Modal.init({
+    resetModal = Modal.init({
         id: modalReset,
         title: "Ganti Username & Password",
         subtitle: "Masukkan username dan password baru Anda.",
@@ -72,6 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <ul>
                     <li>8 karakter</li>
                     <li>1 huruf kapital</li>
+                    <li>1 angka</li>
                     <li>1 simbol (!@#$%)</li>
                 </ul>
             </small>

@@ -105,13 +105,13 @@ function getAll() {
 }
 
 // summary
-function getSummary(filter = "") {
+function getSummary(filterDate = "", filterPayment = "") {
     const db = getDB();
 
     return new Promise((resolve, reject) => {
         let whereClause = "";
 
-        switch (filter) {
+        switch (filterDate) {
             case "today":
                 whereClause = "WHERE DATE(created_at) = DATE('now', 'localtime')";
                 break;
@@ -137,6 +137,13 @@ function getSummary(filter = "") {
 
             default:
                 whereClause = "";
+        }
+
+        // Payment filter
+        if (filterPayment) {
+            whereClause += whereClause
+                ? ` AND payment_method = '${filterPayment}'`
+                : ` WHERE payment_method = '${filterPayment}'`;
         }
 
         db.get(

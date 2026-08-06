@@ -52,13 +52,21 @@ function updateButtons(step) {
 
         // Set initial state
         nextBtn.disabled = !checkbox.checked;
+        nextBtn.style.opacity = !checkbox.checked ? "0.4" : "1";
+        nextBtn.style.cursor = !checkbox.checked ? "not-allowed" : "pointer";
 
         // Use onchange so it replaces any previous handler
         checkbox.onchange = () => {
             nextBtn.disabled = !checkbox.checked;
+            nextBtn.style.opacity = !checkbox.checked ? "0.4" : "1";
+            nextBtn.style.cursor = !checkbox.checked ? "not-allowed" : "pointer";
         };
     } else {
         nextBtn.textContent = "Lanjut";
+
+        nextBtn.disabled = false;
+        nextBtn.style.opacity = "1";
+        nextBtn.style.cursor = "pointer";
     }
 }
 

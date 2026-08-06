@@ -59,6 +59,15 @@ input{
     font-size: 12px;
 }
 
+.helper-text ul {
+    margin: 4px 0 0 18px;
+    padding: 0;
+}
+
+.helper-text li {
+    margin: 2px 0;
+}
+
 #btnLogin{
     width:100%;
     padding:13px;
@@ -75,7 +84,6 @@ input{
 #btnLogin:hover{
     background:#115e59;
 }
-
 
 .btn-primary{
     background:#0f766e;

@@ -261,11 +261,12 @@ textarea{
     align-items: center;
     gap: 4px;
     margin: 8px;
+    font-size: 14px;
 }
 
 .confirm-save input{
-    width: 20px;
-    height: 20px;
+    width: 15px;
+    height: 15px;
 }
 
 @keyframes fadeIn {

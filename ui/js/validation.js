@@ -57,6 +57,13 @@ class Validation {
             };
         }
 
+        if (!/[0-9]/.test(password)) {
+            return {
+                valid: false,
+                message: "Password harus ada 1 angka."
+            };
+        }
+
         if (!/[!@#$%^&*(),.?":{}|<>_\-\\[\]\/+=~`]/.test(password)) {
             return {
                 valid: false,

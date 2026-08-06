@@ -105,6 +105,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <ul>
                         <li>8 karakter</li>
                         <li>1 huruf kapital</li>
+                        <li>1 angka</li>
                         <li>1 simbol (!@#$%)</li>
                     </ul>
                 </small>

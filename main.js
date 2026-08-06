@@ -183,8 +183,8 @@ ipcMain.handle("get-all-transaction", async () => {
 });
 
 //get transaction summary
-ipcMain.handle("get-transaction-summary", async (event, filterDate) => {
-    return await transaction.getSummary(filterDate);
+ipcMain.handle("get-transaction-summary", async (event, filterDate, filterPayment) => {
+    return await transaction.getSummary(filterDate, filterPayment);
 });
 
 // get transaction receipt
@@ -231,11 +231,8 @@ ipcMain.handle("receipt-ready", (event) =>{
 
                 const parent = win.getParentWindow();
 
-                console.log(parent);
-
                 if (parent) {
-                    console.log("hello");
-
+                 
                     parent.webContents.send("print-success", {
                         success,
                         errorType,

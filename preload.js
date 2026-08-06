@@ -53,8 +53,8 @@ contextBridge.exposeInMainWorld("api", {
         return ipcRenderer.invoke("get-all-transaction");
     },
 
-    getTransactionSummary: (filterDate) => {
-        return ipcRenderer.invoke("get-transaction-summary", filterDate);
+    getTransactionSummary: (filterDate, filterPayment) => {
+        return ipcRenderer.invoke("get-transaction-summary", filterDate, filterPayment);
     },
 
     getReceipt: (id) => {

@@ -71,6 +71,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             state.payment = value;
             state.page = 1;
             loadTransactions();
+            loadSummary();
         },
         onExportExcel(){
             exportTransaction();
@@ -278,7 +279,7 @@ function filterByDate(transactions, range) {
 
 // load summary overview
 async function loadSummary() {
-    const summary = await window.api.getTransactionSummary(state.date);
+    const summary = await window.api.getTransactionSummary(state.date, state.payment);
 
     const values = document.querySelectorAll(".summary-value");
 
